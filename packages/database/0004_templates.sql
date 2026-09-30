@@ -1,0 +1,3 @@
+ALTER TABLE templates ADD COLUMN image_id text NOT NULL DEFAULT '';
+CREATE FUNCTION protect_template() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF OLD.status='approved' AND (NEW.body,NEW.title,NEW.route,NEW.channel,NEW.message_class,NEW.purpose_id,NEW.controller_id,NEW.image_id,NEW.hash) IS DISTINCT FROM (OLD.body,OLD.title,OLD.route,OLD.channel,OLD.message_class,OLD.purpose_id,OLD.controller_id,OLD.image_id,OLD.hash) THEN RAISE EXCEPTION 'approved template is immutable'; END IF; RETURN NEW; END $$;
+CREATE TRIGGER template_immutable BEFORE UPDATE ON templates FOR EACH ROW EXECUTE FUNCTION protect_template();

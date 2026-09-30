@@ -1,0 +1,40 @@
+services:
+  scanner:
+    build:
+      context: .
+      dockerfile: apps/scanner/Dockerfile
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=512m
+    shm_size: 512mb
+    mem_limit: 1g
+    cpus: 1
+    pids_limit: 256
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:./apps/scanner/seccomp.json
+    environment:
+      SCAN_EGRESS_PROXY: http://egress:4322
+      SCAN_RUNNER_TOKEN: ${SCAN_RUNNER_TOKEN:?Set a scanner-only secret}
+    ports:
+      - 127.0.0.1:4321:4321
+    networks: [isolated]
+  egress:
+    build:
+      context: .
+      dockerfile: apps/scanner/Dockerfile
+    command: [node, --import, tsx, apps/scanner/proxy.ts]
+    init: true
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    cpus: 0.5
+    networks: [isolated, internet]
+networks:
+  isolated:
+    internal: true
+  internet: {}

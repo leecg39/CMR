@@ -1,0 +1,281 @@
+import { randomUUID } from "node:crypto";
+import { z } from "zod";
+import { audit, type DB } from "../database/index.js";
+import {
+  fail,
+  hash,
+  contactHash,
+  encrypt,
+  calendarDue,
+  permit,
+  type Context,
+} from "./common.js";
+export const consentInput = z
+  .object({
+    subject_id: z.uuid(),
+    contact_id: z.uuid().nullable().optional(),
+    purpose_id: z.uuid(),
+    notice_id: z.uuid().nullable().optional(),
+    action: z.enum(["granted", "denied", "revoked"]),
+    occurred_at: z.iso.datetime().optional(),
+    idempotency_key: z.string().min(1).max(200),
+    expected_revision: z.number().int().nonnegative().optional(),
+  })
+  .strict();
+export async function owned(db: DB, table: string, id: string) {
+  if (
+    ![
+      "subjects",
+      "contact_points",
+      "purposes",
+      "notices",
+      "templates",
+      "sites",
+      "web_configs",
+      "deletion_requests",
+      "deletion_tasks",
+      "message_jobs",
+      "controllers",
+    ].includes(table)
+  )
+    throw Error("table not allowed");
+  const {
+    rows: [row],
+  } = await db.query(`SELECT * FROM ${table} WHERE id=$1`, [id]);
+  if (!row) fail("NOT_FOUND", 404);
+  return row;
+}
+export async function createSubject(db: DB, ctx: Context, input: unknown) {
+  permit(ctx, "consent:write");
+  const i = z
+    .object({ external_id: z.string().min(1).max(120) })
+    .strict()
+    .parse(input);
+  const {
+    rows: [s],
+  } = await db.query(
+    "INSERT INTO subjects(tenant_id,id,external_id) VALUES($1,$2,$3) ON CONFLICT(tenant_id,external_id) DO UPDATE SET external_id=EXCLUDED.external_id RETURNING *",
+    [ctx.tenant, randomUUID(), i.external_id],
+  );
+  return s;
+}
+export async function addContact(db: DB, ctx: Context, input: unknown) {
+  permit(ctx, "consent:write");
+  const i = z
+    .object({
+      subject_id: z.uuid(),
+      channel: z.enum(["sms", "email"]),
+      value: z.string().min(3).max(200),
+      verified: z.boolean(),
+    })
+    .strict()
+    .parse(input);
+  await owned(db, "subjects", i.subject_id);
+  const value =
+    i.channel === "sms"
+      ? i.value.replace(/[^0-9]/g, "")
+      : i.value.trim().toLowerCase();
+  if (
+    i.channel === "sms"
+      ? !/^01[0-9]{8,9}$/.test(value)
+      : !/^.+@.+\..+$/.test(value)
+  )
+    fail("INVALID_CONTACT");
+  const digest = contactHash(ctx.tenant, value);
+  await db.query(
+    "UPDATE contact_points SET active=false WHERE subject_id=$1 AND channel=$2 AND value_hmac<>$3",
+    [i.subject_id, i.channel, digest],
+  );
+  const {
+    rows: [c],
+  } = await db.query(
+    "INSERT INTO contact_points(tenant_id,id,subject_id,channel,encrypted,value_hmac,masked,verified) VALUES($1,$2,$3,$4,$5,$6,$7,$8) ON CONFLICT(tenant_id,subject_id,channel,value_hmac) DO UPDATE SET active=true,verified=EXCLUDED.verified RETURNING id,subject_id,channel,masked,verified,active",
+    [
+      ctx.tenant,
+      randomUUID(),
+      i.subject_id,
+      i.channel,
+      encrypt(ctx.tenant, value),
+      digest,
+      i.channel === "sms"
+        ? `${value.slice(0, 3)}-****-${value.slice(-4)}`
+        : `${value[0]}***@${value.split("@")[1]}`,
+      i.verified,
+    ],
+  );
+  return c;
+}
+export async function recordConsent(
+  db: DB,
+  ctx: Context,
+  input: unknown,
+  options: {
+    now?: Date;
+    legacy?: boolean;
+    web?: boolean;
+    source?: string;
+  } = {},
+) {
+  permit(ctx, "consent:write");
+  const i = consentInput.parse(input),
+    now = options.now ?? new Date(),
+    payload = hash(JSON.stringify(i));
+  const prior = await db.query(
+    "SELECT * FROM consent_events WHERE producer=$1 AND idempotency_key=$2",
+    [ctx.actor, i.idempotency_key],
+  );
+  if (prior.rowCount) {
+    if (prior.rows[0].payload_hash !== payload)
+      fail("IDEMPOTENCY_CONFLICT", 409);
+    return { ...prior.rows[0], duplicate: true };
+  }
+  const subject = await owned(db, "subjects", i.subject_id),
+    purpose = await owned(db, "purposes", i.purpose_id);
+  if (purpose.kind === "web_tracking" && !options.web)
+    fail("WEB_SCOPE_REQUIRED");
+  if (purpose.kind !== "web_tracking" && options.web) fail("WEB_SCOPE_ONLY");
+  if (subject.restricted && i.action === "granted") fail("SUBJECT_RESTRICTED");
+  if (i.contact_id) {
+    const c = await owned(db, "contact_points", i.contact_id);
+    if (
+      c.subject_id !== subject.id ||
+      c.channel !== purpose.channel ||
+      !c.active
+    )
+      fail("CONTACT_SCOPE_MISMATCH");
+  }
+  if (purpose.kind === "advertising_reception" && !i.contact_id)
+    fail("CONTACT_REQUIRED");
+  if (purpose.kind !== "advertising_reception" && i.contact_id)
+    fail("UNEXPECTED_CONTACT");
+  if (i.action === "granted" && !options.legacy) {
+    if (!i.notice_id) fail("NOTICE_REQUIRED");
+    const n = await owned(db, "notices", i.notice_id!);
+    if (n.purpose_id !== purpose.id || n.status !== "published")
+      fail("NOTICE_NOT_PUBLISHED");
+    if (!i.occurred_at) fail("OCCURRED_AT_REQUIRED");
+    if (new Date(i.occurred_at!).getTime() > now.getTime() + 60000)
+      fail("FUTURE_EVENT");
+  }
+  const scope = [subject.id, i.contact_id ?? "", purpose.id].join(":"),
+    {
+      rows: [current],
+    } = await db.query("SELECT * FROM consent_current WHERE scope=$1", [scope]);
+  if (
+    i.expected_revision !== undefined &&
+    i.expected_revision !== (current?.revision ?? 0)
+  )
+    fail("REVISION_CONFLICT", 409);
+  let applied = true;
+  if (i.action === "granted" && current) {
+    if (
+      !i.occurred_at ||
+      new Date(i.occurred_at) <= new Date(current.changed_at)
+    )
+      applied = false;
+  }
+  const revision = (current?.revision ?? 0) + (applied ? 1 : 0),
+    id = randomUUID(),
+    evidence = options.legacy ? "LEGACY_UNVERIFIED" : "VERIFIED";
+  const {
+    rows: [event],
+  } = await db.query(
+    "INSERT INTO consent_events(tenant_id,id,producer,idempotency_key,payload_hash,subject_id,contact_id,purpose_id,notice_id,scope,action,evidence,revision,occurred_at,received_at,source,applied) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17) RETURNING *",
+    [
+      ctx.tenant,
+      id,
+      ctx.actor,
+      i.idempotency_key,
+      payload,
+      subject.id,
+      i.contact_id ?? null,
+      purpose.id,
+      i.notice_id ?? null,
+      scope,
+      i.action,
+      evidence,
+      revision,
+      i.occurred_at ?? null,
+      now,
+      options.source ?? "verified_server",
+      applied,
+    ],
+  );
+  if (!applied) return event;
+  await db.query(
+    "INSERT INTO consent_current(tenant_id,scope,subject_id,contact_id,purpose_id,state,evidence,revision,last_event_id,changed_at,grant_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) ON CONFLICT(tenant_id,scope) DO UPDATE SET state=EXCLUDED.state,evidence=EXCLUDED.evidence,revision=EXCLUDED.revision,last_event_id=EXCLUDED.last_event_id,changed_at=EXCLUDED.changed_at,grant_at=EXCLUDED.grant_at",
+    [
+      ctx.tenant,
+      scope,
+      subject.id,
+      i.contact_id ?? null,
+      purpose.id,
+      { granted: "GRANTED", denied: "DENIED", revoked: "REVOKED" }[i.action],
+      evidence,
+      revision,
+      id,
+      now,
+      i.action === "granted" ? (i.occurred_at ?? null) : null,
+    ],
+  );
+  await db.query(
+    "INSERT INTO suppressions(tenant_id,scope,subject_id,contact_id,purpose_id,active) VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT(tenant_id,scope) DO UPDATE SET active=EXCLUDED.active",
+    [
+      ctx.tenant,
+      scope,
+      subject.id,
+      i.contact_id ?? null,
+      purpose.id,
+      i.action !== "granted",
+    ],
+  );
+  await db.query(
+    "UPDATE notification_jobs SET status='cancelled' WHERE kind='periodic' AND status='pending' AND event_id IN (SELECT id FROM consent_events WHERE scope=$1)",
+    [scope],
+  );
+  if (i.action !== "granted") {
+    if (
+      purpose.kind === "advertising_reception" ||
+      (purpose.kind === "personal_info" && purpose.key === "marketing_use")
+    )
+      await db.query(
+        "UPDATE message_jobs m SET status='cancelled',reasons=ARRAY['CONSENT_WITHDRAWN'] FROM templates t WHERE m.tenant_id=t.tenant_id AND m.template_id=t.id AND m.subject_id=$1 AND t.message_class='marketing' AND t.controller_id=$3 AND ($2::uuid IS NULL OR (m.contact_id=$2 AND t.purpose_id=$4)) AND m.status='queued'",
+        [subject.id, i.contact_id ?? null, purpose.controller_id, purpose.id],
+      );
+    await db.query(
+      "INSERT INTO outbox(tenant_id,id,event_id,kind,payload) VALUES($1,$2,$3,'suppression.propagate',$4)",
+      [
+        ctx.tenant,
+        randomUUID(),
+        id,
+        JSON.stringify({
+          scope,
+          subject_id: subject.id,
+          contact_id: i.contact_id,
+        }),
+      ],
+    );
+  }
+  if (purpose.kind === "advertising_reception") {
+    await db.query(
+      "INSERT INTO notification_jobs(tenant_id,id,event_id,subject_id,kind,due_at) VALUES($1,$2,$3,$4,'processing_result',$5)",
+      [ctx.tenant, randomUUID(), id, subject.id, calendarDue(now, 0, 14)],
+    );
+    if (i.action === "granted" && !options.legacy)
+      await db.query(
+        "INSERT INTO notification_jobs(tenant_id,id,event_id,subject_id,kind,due_at) VALUES($1,$2,$3,$4,'periodic',$5)",
+        [
+          ctx.tenant,
+          randomUUID(),
+          id,
+          subject.id,
+          calendarDue(new Date(i.occurred_at!), 2),
+        ],
+      );
+  }
+  await audit(db, ctx.tenant, ctx.actor, `consent.${i.action}`, {
+    event_id: id,
+    revision,
+  });
+  return event;
+}
