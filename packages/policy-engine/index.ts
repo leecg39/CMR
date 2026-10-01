@@ -143,16 +143,19 @@ export async function evaluate(
     );
     if (blocked.rowCount) r.push("SUPPRESSED");
     const {
-      rows: [tenant],
-    } = await db.query("SELECT * FROM tenants WHERE id=$1", [ctx.tenant]);
-    if (tenant.status !== "active") r.push("TENANT_INACTIVE");
-    const {
-      rows: [usage],
+      rows: [{ tenant, usage }],
     } = await db.query(
-      "SELECT count(*)::int AS n FROM message_jobs m JOIN templates t ON t.tenant_id=m.tenant_id AND t.id=m.template_id WHERE t.message_class='marketing' AND m.status IN ('dispatching','unknown','accepted','delivered') AND m.created_at>=date_trunc('month',$1::timestamptz AT TIME ZONE 'Asia/Seoul') AT TIME ZONE 'Asia/Seoul'",
-      [now],
+      `SELECT to_jsonb(tenant) AS tenant,
+         (SELECT count(*)::int FROM message_jobs m
+           JOIN templates t ON t.tenant_id=m.tenant_id AND t.id=m.template_id
+          WHERE t.message_class='marketing'
+            AND m.status IN ('dispatching','unknown','accepted','delivered')
+            AND m.created_at>=date_trunc('month',$2::timestamptz AT TIME ZONE 'Asia/Seoul') AT TIME ZONE 'Asia/Seoul') AS usage
+         FROM tenants tenant WHERE tenant.id=$1`,
+      [ctx.tenant, now],
     );
-    if (usage.n >= tenant.ad_limit) r.push("QUOTA_EXCEEDED");
+    if (tenant.status !== "active") r.push("TENANT_INACTIVE");
+    if (usage >= tenant.ad_limit) r.push("QUOTA_EXCEEDED");
   }
   const decision = {
     id: randomUUID(),
