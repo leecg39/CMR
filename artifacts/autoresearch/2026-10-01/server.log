@@ -1,0 +1,5 @@
+
+> korean-cmp@0.1.0 dev
+> tsx apps/api/server.ts
+
+CMP: http://127.0.0.1:4310

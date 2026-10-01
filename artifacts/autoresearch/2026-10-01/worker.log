@@ -1,0 +1,4 @@
+
+> korean-cmp@0.1.0 worker
+> tsx apps/worker/main.ts
+

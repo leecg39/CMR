@@ -19,6 +19,8 @@
 
 초기 기준 8.120 ms와 최종 확인 6.231 ms를 비교하면 약 23.3% 감소했습니다. 기준을 다시 측정했을 때 7.418 ms와 7.065 ms도 나왔으므로 시간 차이에는 환경 편차가 포함됩니다. 유지의 주 지표는 반복 실행에서도 동일한 **SQL 호출 수**입니다.
 
+본 프로젝트의 서버는 Node.js 22.23.1을 사용하므로, 동일한 동결 평가를 Node 22에서 수정 전·후에 추가 실행했습니다. SQL **12 → 6회**, p95 중앙값 **7.474 → 5.951 ms**였고 20개 의미 검증이 통과했습니다. 본 프로젝트에서도 기존 테스트 **63개와 빌드를 다시 통과**했습니다. API와 워커를 새 코드로 재시작했고 `/v1/health`의 PostgreSQL·데모 모드와 홈페이지 HTTP 200을 확인했습니다. 평가에서 만든 `cmp_research_*` DB·역할은 0개입니다.
+
 ## 고정 평가와 유지 기준
 
 평가 코드와 기존 테스트를 실험 전에 SHA-256으로 고정했습니다. 각 실험은 구현만 먼저 커밋한 뒤 측정했고, 종료 시 평가·테스트 파일의 해시가 모두 일치했습니다.
@@ -35,7 +37,7 @@
 
 조회들을 합쳤으며 판단 조건·사유 순서·판단 원장 기록은 유지했습니다. JOIN에는 고객사 키가 포함되고 기존 FORCE RLS와 고객사별 트랜잭션 잠금이 적용됩니다. 캐시를 추가하거나 현재 동의의 재확인을 생략하지 않았습니다.
 
-환경은 Node.js v25.4.0, macOS arm64, PostgreSQL 17.11이며 합성 데이터와 로컬 연결입니다. 큰 고객사 데이터, 원격 DB·네트워크, 운영 트래픽의 성능은 이 결과로 보장하지 않습니다. UI를 바꾸지 않았으며 이번 실험에서 브라우저 QA를 다시 수행하지 않았습니다. 앞선 브라우저 결과는 [QA 보고서](../../qa/2026-10-01/report.md)에 있습니다.
+3회 실험은 작업공간의 Node.js v25.4.0, 실제 서버 환경 추가 확인은 Node.js 22.23.1에서 실행했습니다. macOS arm64, PostgreSQL 17.11의 합성 데이터와 로컬 연결입니다. 서로 다른 Node 버전 간 지연은 비교하지 않았습니다. 큰 고객사 데이터, 원격 DB·네트워크, 운영 트래픽의 성능은 이 결과로 보장하지 않습니다. UI를 바꾸지 않았으며 이번 실험에서 브라우저 QA를 다시 수행하지 않았습니다. 앞선 브라우저 결과는 [QA 보고서](../../qa/2026-10-01/report.md)에 있습니다.
 
 문자·080 실연동과 실제 파일럿은 사용자 요청대로 보류했습니다. 실제 메시지를 발송하지 않았습니다.
 
@@ -55,5 +57,7 @@ npm run build
 - [기준](baseline.json), [기준 재측정](baseline-repeat.json), [동결 직전 재검증](baseline-frozen-check.json)
 - [실험 1](iteration-1.json), [확인 1](iteration-1-confirm.json), [실험 2](iteration-2.json), [확인 2](iteration-2-confirm.json), [실험 3](iteration-3.json), [확인 3](iteration-3-confirm.json)
 - [동결 해시](frozen-evaluation.json), [실제 HTTP·DB 결과](http/http.json)
+- [Node 22 수정 전](runtime-22-baseline.json), [Node 22 수정 후](runtime-22-final.json), [실행 서버 확인](local-runtime.json)
 - 테스트·빌드 원본: `guard-baseline-*`, `guard-1-*`, `guard-2-*`, `guard-3-*.log`; HTTP 원본: `http-poc.log`, `http/api.log`
+- 실제 서버 환경 테스트·빌드: `runtime-22-tests.log`, `runtime-22-build.log`; 재시작 로그: `server.log`, `worker.log`
 - 평가 코드: `autoresearch/policy-2026-10-01/prepare.ts`, 지침: 같은 폴더의 `program.md`, 세션 상태: `autoresearch.md`

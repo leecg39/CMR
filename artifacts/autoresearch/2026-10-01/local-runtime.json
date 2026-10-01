@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-10-01T06:12:09.698Z",
+  "source_commit": "06371b25efcad6a1b3c67f5c7ecccc470c354f63",
+  "node": "v22.23.1",
+  "url": "http://127.0.0.1:4310/",
+  "ui_http_status": 200,
+  "health": {
+    "ok": true,
+    "storage": "postgresql",
+    "mode": "demo"
+  },
+  "api_restarted": true,
+  "worker_restarted": true,
+  "research_cleanup": {
+    "research_dbs": 0,
+    "research_roles": 0
+  }
+}

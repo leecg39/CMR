@@ -82,5 +82,31 @@
     "SOLAPI/080 live integration and pilot deferred by user",
     "large tenant datasets and remote DB/network not benchmarked",
     "no frontend or browser UI changes"
-  ]
+  ],
+  "production_runtime_confirmation": {
+    "node": "v22.23.1",
+    "baseline": 12,
+    "final": 6,
+    "baseline_p95_ms": 7.473749999999882,
+    "final_p95_ms": 5.951416000000108,
+    "semantic_checks": 20,
+    "tests": 63,
+    "build": "passed",
+    "latency_gate": "passed",
+    "frozen_hashes": "matched"
+  },
+  "local_runtime": {
+    "url": "http://127.0.0.1:4310/",
+    "health": {
+      "ok": true,
+      "storage": "postgresql",
+      "mode": "demo"
+    },
+    "api_restarted": true,
+    "worker_restarted": true,
+    "research_cleanup": {
+      "research_dbs": 0,
+      "research_roles": 0
+    }
+  }
 }
