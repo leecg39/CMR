@@ -47,12 +47,22 @@ export async function evaluate(
   now = new Date(),
 ) {
   permit(ctx, "decisions");
-  const i = sendInput.parse(input),
-    s = await owned(db, "subjects", i.subject_id),
-    c = await owned(db, "contact_points", i.contact_id),
-    t = await owned(db, "templates", i.template_id),
-    controller = await owned(db, "controllers", t.controller_id),
-    r: string[] = [];
+  const i = sendInput.parse(input);
+  const {
+    rows: [entities],
+  } = await db.query(
+    `SELECT to_jsonb(s) AS subject, to_jsonb(c) AS contact,
+            to_jsonb(t) AS template, to_jsonb(ctrl) AS controller
+       FROM subjects s
+       JOIN contact_points c ON c.tenant_id=s.tenant_id AND c.id=$2
+       JOIN templates t ON t.tenant_id=s.tenant_id AND t.id=$3
+       JOIN controllers ctrl ON ctrl.tenant_id=t.tenant_id AND ctrl.id=t.controller_id
+      WHERE s.id=$1`,
+    [i.subject_id, i.contact_id, i.template_id],
+  );
+  if (!entities) fail("NOT_FOUND", 404);
+  const { subject: s, contact: c, template: t, controller } = entities;
+  const r: string[] = [];
   if (c.subject_id !== s.id) fail("CONTACT_SCOPE_MISMATCH");
   if (s.restricted || s.deleted_at) r.push("SUBJECT_RESTRICTED");
   if (!c.active || !c.verified) r.push("CONTACT_UNVERIFIED");
