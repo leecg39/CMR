@@ -1,0 +1,15 @@
+
+> korean-cmp@0.1.0 poc
+> node --import tsx scripts/poc.ts
+
+PASS 비소유자 역할과 모든 고객사 테이블의 FORCE RLS
+PASS 테이블 소유자와 FORCE RLS 누락 시 API 시작 거부
+PASS 동일 외부 ID와 전화번호의 고객사 분리
+PASS DB 교차 조회·쓰기·외래키 참조와 풀 재사용 격리
+PASS 실패한 철회의 이벤트·상태·거부·통지·outbox 전체 롤백
+PASS 실제 HTTP 서버의 PostgreSQL 연결과 데모 경로 차단
+PASS 실제 HTTP의 다른 고객사 증빙·회원·수정 차단과 범위 검증
+PASS 동시 HTTP 재전송 8건이 서버 원장·통지에 한 번만 반영
+PASS 원장·게시 문구·감사 기록의 직접 수정과 삭제 차단
+PASS 별도 API 프로세스 재시작 후 서버 기록·문구·철회 유지
+REPORT /Users/user01/Desktop/CMP/.local/autoresearch-worktree/artifacts/autoresearch/2026-10-01/http/http.json

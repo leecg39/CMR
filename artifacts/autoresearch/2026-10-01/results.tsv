@@ -1,3 +1,6 @@
 # metric_direction: lower_is_better
 iteration	commit	metric	delta	guard	status	description
 0	983320c	12	0	pass	baseline	isolated PostgreSQL baseline; repeated query count 12
+1	c473e67	9	-3	pass	keep	join tenant-owned entity lookups; both measurements and 63 tests passed
+2	ab3424f	7	-2	pass	keep	read purpose and consent states in one query; both measurements and 63 tests passed
+3	e5d21cc	6	-1	pass	keep	read tenant and monthly usage together; both measurements, 63 tests and HTTP/DB PoC passed

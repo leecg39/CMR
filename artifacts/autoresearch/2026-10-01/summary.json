@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-01",
+  "bounded_iterations": 3,
+  "metric_name": "SQL calls per allowed marketing evaluation",
+  "transaction_queries_excluded": true,
+  "baseline": 12,
+  "final": 6,
+  "reduction_percent": 50,
+  "keeps": 3,
+  "discards": 0,
+  "crashes": 0,
+  "baseline_p95_ms": 8.119625000000042,
+  "final_confirmation_p95_ms": 6.231459000000086,
+  "baseline_repeats_p95_ms": [
+    7.4179169999999885,
+    7.065166999999974
+  ],
+  "evaluation_samples_per_invocation": 500,
+  "concurrency": 5,
+  "semantic_checks": 20,
+  "iterations": [
+    {
+      "iteration": 1,
+      "commit": "c473e67b1d7b6a4dfde494c4dbca573872d7e557",
+      "metric": 9,
+      "median_p95_ms": 6.680541999999946,
+      "confirmation_p95_ms": 6.953334000000041,
+      "status": "keep",
+      "semantic_checks": 20,
+      "guard": {
+        "tests": 63,
+        "failures": 0,
+        "skipped": 0,
+        "build": "passed",
+        "frozen_hashes": "matched"
+      }
+    },
+    {
+      "iteration": 2,
+      "commit": "ab3424fefd2511860956520adc6c18e17fd95fdb",
+      "metric": 7,
+      "median_p95_ms": 6.39970900000003,
+      "confirmation_p95_ms": 6.5206249999999955,
+      "status": "keep",
+      "semantic_checks": 20,
+      "guard": {
+        "tests": 63,
+        "failures": 0,
+        "skipped": 0,
+        "build": "passed",
+        "frozen_hashes": "matched"
+      }
+    },
+    {
+      "iteration": 3,
+      "commit": "e5d21cc25ed06bff72f599e2a352b77ba4f2f4c8",
+      "metric": 6,
+      "median_p95_ms": 5.81554200000005,
+      "confirmation_p95_ms": 6.231459000000086,
+      "status": "keep",
+      "semantic_checks": 20,
+      "guard": {
+        "tests": 63,
+        "failures": 0,
+        "skipped": 0,
+        "build": "passed",
+        "frozen_hashes": "matched"
+      }
+    }
+  ],
+  "http_db_checks": 10,
+  "http_poc_cleanup": "temporary database and role removed",
+  "frozen_evaluation": true,
+  "target_sha256": "2012ad93a0e903b01c558df0748064335a14aca7807fbb4f0d1b5a7c95585a4c",
+  "runtime": {
+    "node": "v25.4.0",
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  "limitations": [
+    "local synthetic fixtures; not a production SLA",
+    "SOLAPI/080 live integration and pilot deferred by user",
+    "large tenant datasets and remote DB/network not benchmarked",
+    "no frontend or browser UI changes"
+  ]
+}
