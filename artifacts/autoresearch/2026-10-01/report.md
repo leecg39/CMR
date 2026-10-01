@@ -59,5 +59,5 @@ npm run build
 - [동결 해시](frozen-evaluation.json), [실제 HTTP·DB 결과](http/http.json)
 - [Node 22 수정 전](runtime-22-baseline.json), [Node 22 수정 후](runtime-22-final.json), [실행 서버 확인](local-runtime.json)
 - 테스트·빌드 원본: `guard-baseline-*`, `guard-1-*`, `guard-2-*`, `guard-3-*.log`; HTTP 원본: `http-poc.log`, `http/api.log`
-- 실제 서버 환경 테스트·빌드: `runtime-22-tests.log`, `runtime-22-build.log`; 재시작 로그: `server.log`, `worker.log`
+- 실제 서버 환경 테스트·빌드: `runtime-22-tests.log`, `runtime-22-build.log`; 시작 기록 스냅샷: `server-startup.log`, `worker-startup.log`
 - 평가 코드: `autoresearch/policy-2026-10-01/prepare.ts`, 지침: 같은 폴더의 `program.md`, 세션 상태: `autoresearch.md`
