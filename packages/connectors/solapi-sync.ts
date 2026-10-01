@@ -61,7 +61,7 @@ export async function syncSolapi(tenant: string) {
       if (!inserted.rowCount) continue;
       const contacts = (
         await db.query(
-          "SELECT c.id,c.subject_id,p.id AS purpose_id FROM contact_points c CROSS JOIN purposes p JOIN controllers ctrl ON ctrl.tenant_id=p.tenant_id AND ctrl.id=p.controller_id WHERE c.tenant_id=p.tenant_id AND c.active AND c.value_hmac=$1 AND p.kind='advertising_reception' AND p.channel='sms' AND ctrl.sender=$2",
+          "SELECT c.id,c.subject_id,p.id AS purpose_id FROM contact_points c CROSS JOIN purposes p JOIN controllers ctrl ON ctrl.tenant_id=p.tenant_id AND ctrl.id=p.controller_id LEFT JOIN consent_current cur ON cur.tenant_id=c.tenant_id AND cur.subject_id=c.subject_id AND cur.contact_id=c.id AND cur.purpose_id=p.id WHERE c.tenant_id=p.tenant_id AND c.active AND c.value_hmac=$1 AND p.kind='advertising_reception' AND p.channel='sms' AND ctrl.sender=$2 AND (cur.state IS NULL OR cur.state='GRANTED')",
           [
             contactHash(tenant, b.recipientNumber.replace(/\D/g, "")),
             b.senderNumber.replace(/\D/g, ""),

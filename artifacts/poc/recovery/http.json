@@ -1,0 +1,164 @@
+{
+  "started_at": "2026-10-01T02:05:12.363Z",
+  "source_sha256": "5ecbcf5436139ebe3599de8cc41a929abed29421fc28398bc9d9691fa9d1fa4c",
+  "checks": [
+    {
+      "name": "비소유자 역할과 모든 고객사 테이블의 FORCE RLS",
+      "status": "passed",
+      "details": {
+        "tables": [
+          "agreement_events",
+          "agreement_versions",
+          "audit_log",
+          "connectors",
+          "consent_current",
+          "consent_events",
+          "contact_points",
+          "controllers",
+          "decisions",
+          "deletion_journal",
+          "deletion_requests",
+          "deletion_tasks",
+          "holds",
+          "identity_links",
+          "message_jobs",
+          "notices",
+          "notification_jobs",
+          "outbox",
+          "provider_events",
+          "provider_receipts",
+          "purposes",
+          "retention_policies",
+          "scans",
+          "sites",
+          "subjects",
+          "suppressions",
+          "templates",
+          "web_configs"
+        ]
+      }
+    },
+    {
+      "name": "테이블 소유자와 FORCE RLS 누락 시 API 시작 거부",
+      "status": "passed",
+      "details": {
+        "rejected_configs": [
+          "tenant table owner",
+          "FORCE RLS disabled"
+        ]
+      }
+    },
+    {
+      "name": "동일 외부 ID와 전화번호의 고객사 분리",
+      "status": "passed"
+    },
+    {
+      "name": "DB 교차 조회·쓰기·외래키 참조와 풀 재사용 격리",
+      "status": "passed"
+    },
+    {
+      "name": "실패한 철회의 이벤트·상태·거부·통지·outbox 전체 롤백",
+      "status": "passed",
+      "details": {
+        "before": {
+          "consent_events": "2",
+          "consent_current": "2",
+          "suppressions": "2",
+          "notification_jobs": "2",
+          "outbox": "0",
+          "audit_log": "2",
+          "state": {
+            "state": "GRANTED",
+            "revision": 1,
+            "last_event_id": "866ed3a8-aa34-4d7b-9d3d-10505fe2fd5d"
+          }
+        },
+        "after_equal": true
+      }
+    },
+    {
+      "name": "실제 HTTP 서버의 PostgreSQL 연결과 데모 경로 차단",
+      "status": "passed",
+      "details": {
+        "ok": true,
+        "storage": "postgresql",
+        "mode": "production"
+      }
+    },
+    {
+      "name": "실제 HTTP의 다른 고객사 증빙·회원·수정 차단과 범위 검증",
+      "status": "passed"
+    },
+    {
+      "name": "동시 HTTP 재전송 8건이 서버 원장·통지에 한 번만 반영",
+      "status": "passed",
+      "details": {
+        "concurrent_requests": 8,
+        "unique_event_count": 1,
+        "event_id": "42af970e-863f-4008-b0d4-268958affdff",
+        "received_at": "2026-10-01T02:05:13.795Z",
+        "revision": 2
+      }
+    },
+    {
+      "name": "원장·게시 문구·감사 기록의 직접 수정과 삭제 차단",
+      "status": "passed",
+      "details": {
+        "blocked_mutations": 6
+      }
+    },
+    {
+      "name": "별도 API 프로세스 재시작 후 서버 기록·문구·철회 유지",
+      "status": "passed",
+      "details": {
+        "event_id": "42af970e-863f-4008-b0d4-268958affdff",
+        "sha256": "03be62d026054e2e090eb8edfde48af715220459aff852d9ceb815dff5a006bc",
+        "other_customer_unchanged": true
+      }
+    },
+    {
+      "name": "전체 DB 암호화 백업의 변조 거부와 새 DB 복원",
+      "status": "passed",
+      "details": {
+        "public_tables": 33,
+        "dump_bytes": 116159,
+        "encrypted_sha256": "f4c476006f59354262d83629b1ffa089c60483704c30091c71b9be3a571b6489",
+        "encryption": "AES-256-GCM",
+        "tampering_rejected": true,
+        "wrong_key_rejected": true,
+        "plaintext_dump_on_disk": false,
+        "backup_key_retained": false
+      }
+    },
+    {
+      "name": "복원 DB의 비소유자 API·고객사 격리·원장 불변성",
+      "status": "passed",
+      "details": {
+        "api_started_with_non_owner": true,
+        "cross_customer_http_status": 404,
+        "immutable_update_rejected": true,
+        "contact_key_recovered": true
+      }
+    },
+    {
+      "name": "백업 이후 삭제 이력의 재적용·광고 차단·재내보내기 보존",
+      "status": "passed",
+      "details": {
+        "reapplied": 1,
+        "reservation_cancelled": true,
+        "advertising_blocked": true,
+        "deletion_preserved_in_next_export": true,
+        "repeated_apply_journal_rows": 1
+      }
+    }
+  ],
+  "status": "passed",
+  "environment": {
+    "node": "v22.23.1",
+    "postgres": "PostgreSQL 17.11 (Homebrew) on aarch64-apple-darwin25.5.0, compiled by Apple clang version 21.0.0 (clang-2100.1.1.101), 64-bit",
+    "synthetic": true,
+    "real_messages_sent": false
+  },
+  "cleanup": "source and restored temporary databases and role removed",
+  "finished_at": "2026-10-01T02:05:15.576Z"
+}

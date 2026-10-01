@@ -1,0 +1,80 @@
+{
+  "events": [
+    {
+      "id": "d59e94a8-c152-4fac-81f5-32b90e6378a2",
+      "subject_id": "0cfd523d-5493-4500-bbe7-8d40e2008a14",
+      "action": "denied",
+      "revision": 1,
+      "received_at": "2026-09-30T22:03:30.280Z",
+      "source": "web:0cf03f2d-c33f-4aa5-994a-b5b4ca72fc62:v1"
+    },
+    {
+      "id": "75765097-ef9c-4f91-93d0-479b5cf98860",
+      "subject_id": "0cfd523d-5493-4500-bbe7-8d40e2008a14",
+      "action": "denied",
+      "revision": 1,
+      "received_at": "2026-09-30T22:03:30.291Z",
+      "source": "web:0cf03f2d-c33f-4aa5-994a-b5b4ca72fc62:v1"
+    },
+    {
+      "id": "ef2927d1-dca4-4fb2-b104-f6095b2060d5",
+      "subject_id": "0cfd523d-5493-4500-bbe7-8d40e2008a14",
+      "action": "granted",
+      "revision": 2,
+      "received_at": "2026-09-30T22:03:31.650Z",
+      "source": "web:0cf03f2d-c33f-4aa5-994a-b5b4ca72fc62:v1"
+    },
+    {
+      "id": "22a35292-d04c-4f1c-ab34-2eac415616bf",
+      "subject_id": "0cfd523d-5493-4500-bbe7-8d40e2008a14",
+      "action": "denied",
+      "revision": 2,
+      "received_at": "2026-09-30T22:03:31.657Z",
+      "source": "web:0cf03f2d-c33f-4aa5-994a-b5b4ca72fc62:v1"
+    },
+    {
+      "id": "a1b95fba-ae67-4ba1-80da-ef841f838de7",
+      "subject_id": "0cfd523d-5493-4500-bbe7-8d40e2008a14",
+      "action": "granted",
+      "revision": 3,
+      "received_at": "2026-09-30T22:04:03.297Z",
+      "source": "web:0cf03f2d-c33f-4aa5-994a-b5b4ca72fc62:v1"
+    },
+    {
+      "id": "9940664a-c9fb-439c-92d5-7ce4414e3669",
+      "subject_id": "0cfd523d-5493-4500-bbe7-8d40e2008a14",
+      "action": "granted",
+      "revision": 3,
+      "received_at": "2026-09-30T22:04:03.310Z",
+      "source": "web:0cf03f2d-c33f-4aa5-994a-b5b4ca72fc62:v1"
+    },
+    {
+      "id": "eddfdc2a-03a8-4c78-8f04-04a7d970a8ad",
+      "subject_id": "0cfd523d-5493-4500-bbe7-8d40e2008a14",
+      "action": "denied",
+      "revision": 4,
+      "received_at": "2026-09-30T22:04:04.539Z",
+      "source": "web:0cf03f2d-c33f-4aa5-994a-b5b4ca72fc62:v1"
+    },
+    {
+      "id": "14aab0b6-aa27-447a-aeb5-fa491ccb2072",
+      "subject_id": "0cfd523d-5493-4500-bbe7-8d40e2008a14",
+      "action": "denied",
+      "revision": 4,
+      "received_at": "2026-09-30T22:04:04.545Z",
+      "source": "web:0cf03f2d-c33f-4aa5-994a-b5b4ca72fc62:v1"
+    }
+  ],
+  "current": [
+    {
+      "state": "DENIED",
+      "key": "advertising",
+      "revision": 4
+    },
+    {
+      "state": "DENIED",
+      "key": "analytics",
+      "revision": 4
+    }
+  ]
+}

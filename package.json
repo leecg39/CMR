@@ -10,6 +10,8 @@
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
     "test": "tsx scripts/test.ts",
+    "poc": "node --import tsx scripts/poc.ts",
+    "poc:recovery": "node --import tsx scripts/poc.ts --recovery",
     "setup": "tsx scripts/setup.ts",
     "seed": "tsx scripts/seed.ts"
   },

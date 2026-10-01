@@ -1,0 +1,167 @@
+[
+  {
+    "table": "agreement_events",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "agreement_versions",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "api_keys",
+    "rows": 4,
+    "sha256": "add7ca5a4436272172afbca4b75c839fde60ffafa606baa475e9cd82cb123c6d"
+  },
+  {
+    "table": "audit_log",
+    "rows": 10,
+    "sha256": "724c54e1b262a8830394e009829bd4160d0c264ee6d3689c6d12473859aef794"
+  },
+  {
+    "table": "connectors",
+    "rows": 3,
+    "sha256": "100d974c5cec487c01b0fa7aff9b05609a07b14a9c10633358fb014a8ad129dd"
+  },
+  {
+    "table": "consent_current",
+    "rows": 6,
+    "sha256": "688babe2b55319480763dcfcfd5e8e607d9c69615a4e0c3d093824f961ecd569"
+  },
+  {
+    "table": "consent_events",
+    "rows": 7,
+    "sha256": "87afab9c1a118842aa76d4645d69a3e3c10b0062f6dbc525a60c27abc1379841"
+  },
+  {
+    "table": "contact_points",
+    "rows": 3,
+    "sha256": "d60ce6f4d63df33735c11696dad95f18405bfa35b2fa64ab0e2c79ab48d8cb07"
+  },
+  {
+    "table": "controllers",
+    "rows": 3,
+    "sha256": "1a915e0c8576276082dea612a9e84d3503ffdec693c959d63f9afe683868ec8c"
+  },
+  {
+    "table": "decisions",
+    "rows": 1,
+    "sha256": "64f54879068096a3cbfde35839957d4218040f9581e92535cadb648b2dea7b0f"
+  },
+  {
+    "table": "deletion_journal",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "deletion_requests",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "deletion_tasks",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "holds",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "identity_links",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "memberships",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "message_jobs",
+    "rows": 1,
+    "sha256": "688fe58e09ebfedd611a3b184c1cdd9265e083f2b83ef34629ef668b16991122"
+  },
+  {
+    "table": "notices",
+    "rows": 15,
+    "sha256": "1bf7bf9afecfb25ff2288b99b881ecccb723b8b514a8554e1eb297bc1bbfda6c"
+  },
+  {
+    "table": "notification_jobs",
+    "rows": 7,
+    "sha256": "6c1146061f6d7c2e618f691e950e97b5aca7580db4284e44c89aeb5bd68ebc9e"
+  },
+  {
+    "table": "outbox",
+    "rows": 1,
+    "sha256": "f18f108ee9e1975fa9a4e1bc7284a4af8a53f5b074fd7686aa64db52807cdcf4"
+  },
+  {
+    "table": "provider_events",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "provider_receipts",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "purposes",
+    "rows": 15,
+    "sha256": "d7092b5e3f5bb31339b4a3baa89d076631bf9d4dea9bcbe677263d8ba7baff65"
+  },
+  {
+    "table": "retention_policies",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "scans",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "sessions",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "sites",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "subjects",
+    "rows": 3,
+    "sha256": "677be1ec0cbdde2889dff596ee12f88ec0b77c42e00dc4faef9f2794a8ee8ce2"
+  },
+  {
+    "table": "suppressions",
+    "rows": 6,
+    "sha256": "8db13624308cda9d885633252c3d5c73bf2dca159c6901118480c84c4e80cdc1"
+  },
+  {
+    "table": "templates",
+    "rows": 3,
+    "sha256": "f7a7fcf7a705cb0e8be2507f1b2a84e210b5f33743e089fc399d562cd23bf2de"
+  },
+  {
+    "table": "tenants",
+    "rows": 3,
+    "sha256": "0f7435619a8536915b9f6a34e5b119acf9a6b15f888217bf3ee959dde32de27f"
+  },
+  {
+    "table": "users",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "table": "web_configs",
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  }
+]

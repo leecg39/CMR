@@ -4,11 +4,15 @@
     base = new URL(script.src).origin,
     key = script.dataset.site;
   const storageKey = "cmp-session:" + key;
+  const saveFailureMessage =
+    "선택을 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.";
   let config,
     session,
     choices = { analytics: false, advertising: false },
     panel,
-    activated = new Set();
+    activated = new Set(),
+    saveQueue = Promise.resolve(),
+    latestSelection = 0;
   window.dataLayer = window.dataLayer || [];
   function gtag() {
     window.dataLayer.push(arguments);
@@ -25,8 +29,7 @@
       headers: body ? { "Content-Type": "application/json" } : {},
       body: body ? JSON.stringify(body) : undefined,
     });
-    if (!r.ok)
-      throw Error("선택을 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+    if (!r.ok) throw Error(saveFailureMessage);
     return r.json();
   };
   function apply() {
@@ -65,22 +68,28 @@
       new CustomEvent("cmp:change", { detail: { ...choices } }),
     );
   }
-  async function save(next) {
-    const error = panel.querySelector("[role=alert]");
-    try {
-      const result = await request("/v1/web/consent", {
-        key,
-        session,
-        version: config.version,
-        choices: next,
-        idempotency_key: crypto.randomUUID(),
-      });
-      choices = result.choices;
-      apply();
-      panel.hidden = true;
-    } catch (e) {
-      error.textContent = e.message;
-    }
+  function save(next) {
+    const selection = ++latestSelection;
+    panel.querySelector("[role=alert]").textContent = "";
+    saveQueue = saveQueue.then(async () => {
+      try {
+        const result = await request("/v1/web/consent", {
+          key,
+          session,
+          version: config.version,
+          choices: next,
+          idempotency_key: crypto.randomUUID(),
+        });
+        if (selection !== latestSelection) return;
+        choices = result.choices;
+        apply();
+        panel.hidden = true;
+      } catch {
+        if (selection === latestSelection)
+          panel.querySelector("[role=alert]").textContent = saveFailureMessage;
+      }
+    });
+    return saveQueue;
   }
   function show() {
     if (!config) return;

@@ -1,0 +1,21 @@
+{
+  "checked_at": "2026-10-01T02:21:38.951Z",
+  "solapi_credentials_configured": false,
+  "real_messages_enabled": false,
+  "registered_solapi_connectors": 0,
+  "verified_public_sites": 2,
+  "latest_browser_verified": true,
+  "release_allowed": false,
+  "scope_status": "authorized_local_work_complete",
+  "user_deferred": [
+    "문자·080 실연동",
+    "파일럿 검증"
+  ],
+  "remaining_release_gates": [
+    "authorized_provider_account_sender_optout_test_recipient",
+    "customer_public_site_tag_verification",
+    "production_infrastructure_keys_restore_drill",
+    "pilot_customer_approval",
+    "billing_and_customer_processing_review"
+  ]
+}

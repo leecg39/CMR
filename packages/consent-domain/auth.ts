@@ -60,13 +60,20 @@ export function verifyTotp(
       return s + offset;
   return null;
 }
+export const normalizeEmail = (email: string) => email.trim().toLowerCase();
+let dummyHash: string | undefined;
 export async function login(email: string, password: string, code?: string) {
   const {
     rows: [u],
   } = await pool.query("SELECT * FROM users WHERE email=$1", [
-    email.toLowerCase(),
+    normalizeEmail(email),
   ]);
-  if (!u || !passwordCheck(password, u.password_hash))
+  if (!u) {
+    // Spend the same scrypt work for unknown accounts so response time does not reveal registered emails.
+    passwordCheck(password, (dummyHash ??= passwordHash(token())));
+    fail("INVALID_CREDENTIALS", 401);
+  }
+  if (!passwordCheck(password, u.password_hash))
     fail("INVALID_CREDENTIALS", 401);
   if (u.mfa_secret) {
     if (!code) fail("MFA_REQUIRED", 401);
@@ -128,10 +135,12 @@ export async function authenticate(
 }
 export async function beginMfa(user: string) {
   const secret = base32(randomBytes(20));
-  await pool.query("UPDATE users SET mfa_pending=$2 WHERE id=$1", [
-    user,
-    encrypt("auth", secret),
-  ]);
+  // An enrolled factor must not be replaceable by whoever holds the session alone.
+  const r = await pool.query(
+    "UPDATE users SET mfa_pending=$2 WHERE id=$1 AND mfa_secret IS NULL",
+    [user, encrypt("auth", secret)],
+  );
+  if (!r.rowCount) fail("MFA_ALREADY_ENABLED", 409);
   return {
     secret,
     uri: `otpauth://totp/Consent%20Operations:${user}?secret=${secret}&issuer=Consent%20Operations`,
@@ -140,20 +149,24 @@ export async function beginMfa(user: string) {
 export async function finishMfa(user: string, code: string) {
   const {
     rows: [u],
-  } = await pool.query("SELECT mfa_pending FROM users WHERE id=$1", [user]);
+  } = await pool.query("SELECT mfa_pending,mfa_secret FROM users WHERE id=$1", [
+    user,
+  ]);
+  if (u?.mfa_secret) fail("MFA_ALREADY_ENABLED", 409);
   if (!u?.mfa_pending) fail("MFA_SETUP_REQUIRED");
   const step = verifyTotp(decrypt("auth", u.mfa_pending), code);
   if (step === null) fail("INVALID_MFA");
-  await pool.query(
-    "UPDATE users SET mfa_secret=mfa_pending,mfa_pending=NULL,mfa_last_step=$2 WHERE id=$1",
+  const r = await pool.query(
+    "UPDATE users SET mfa_secret=mfa_pending,mfa_pending=NULL,mfa_last_step=$2 WHERE id=$1 AND mfa_secret IS NULL AND mfa_pending IS NOT NULL",
     [user, step],
   );
+  if (!r.rowCount) fail("MFA_ALREADY_ENABLED", 409);
 }
 export async function newUser(email: string, password: string, name: string) {
   const id = randomUUID();
   await pool.query(
     "INSERT INTO users(id,email,password_hash,name) VALUES($1,$2,$3,$4)",
-    [id, email, passwordHash(password), name],
+    [id, normalizeEmail(email), passwordHash(password), name],
   );
   return id;
 }

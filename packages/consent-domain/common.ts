@@ -11,12 +11,13 @@ export class AppError extends Error {
   constructor(
     public code: string,
     public status = 400,
+    public details?: string[],
   ) {
     super(code);
   }
 }
-export const fail = (code: string, status = 400): never => {
-  throw new AppError(code, status);
+export const fail = (code: string, status = 400, details?: string[]): never => {
+  throw new AppError(code, status, details);
 };
 export const hash = (v: string) => createHash("sha256").update(v).digest("hex");
 export const token = () => randomBytes(32).toString("base64url");
@@ -29,9 +30,9 @@ export const passwordCheck = (v: string, h: string) => {
   return safeEqual(scryptSync(v, s, 64).toString("hex"), k);
 };
 export function safeEqual(a: string, b: string) {
-  return (
-    a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b))
-  );
+  const left = Buffer.from(a),
+    right = Buffer.from(b);
+  return left.length === right.length && timingSafeEqual(left, right);
 }
 const key = (t: string) => {
   const master = Buffer.from(process.env.CMP_MASTER_KEY ?? "", "base64");

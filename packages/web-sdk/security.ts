@@ -28,6 +28,10 @@ export async function verifyDomain(domain: string, token: string) {
     return false;
   }
 }
+// Node 22 connects with autoSelectFamily and asks lookup for {all:true}; answer both forms with the validated address only.
+export const pinnedLookup =
+  (address: string) => (_host: string, opts: any, cb: any) =>
+    opts?.all ? cb(null, [{ address, family: 4 }]) : cb(null, address, 4);
 export async function safeScan(domain: string) {
   if (!/^(?=.{1,253}$)[a-z0-9][a-z0-9.-]*\.[a-z]{2,}$/i.test(domain))
     fail("INVALID_DOMAIN");
@@ -46,7 +50,7 @@ export async function safeScan(domain: string) {
         path: "/",
         port: 443,
         servername: domain,
-        lookup: (_host, _opts, cb: any) => cb(null, address, 4),
+        lookup: pinnedLookup(address),
         timeout: 8000,
         headers: { "User-Agent": "CMP-Install-Check/1.0" },
       },

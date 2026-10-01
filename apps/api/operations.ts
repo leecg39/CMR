@@ -2,20 +2,20 @@ import { parse } from "csv-parse/sync";
 import { randomUUID, createHmac } from "node:crypto";
 import type { FastifyInstance, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { pool, transaction, audit } from "../../packages/database/index.js";
+import { transaction, audit } from "../../packages/database/index.js";
 import { authenticate } from "../../packages/consent-domain/auth.js";
 import {
   fail,
   hash,
   permit,
   safeEqual,
-  type Context,
 } from "../../packages/consent-domain/common.js";
 import {
   owned,
   recordConsent,
   createSubject,
   addContact,
+  externalId,
 } from "../../packages/consent-domain/consent.js";
 const auth = (r: FastifyRequest) =>
   authenticate(
@@ -53,21 +53,28 @@ export async function operationRoutes(app: FastifyInstance) {
     const i = z
       .object({
         subject_id: z.uuid(),
-        basis: z.string().min(10),
+        basis: z.string().min(10).max(2000),
         until_at: z.iso.datetime(),
       })
       .strict()
       .parse(req.body);
+    if (new Date(i.until_at).getTime() <= Date.now()) fail("HOLD_IN_PAST");
     return transaction(c.tenant, async (db) => {
       await owned(db, "subjects", i.subject_id);
+      const id = randomUUID();
       await db.query("INSERT INTO holds VALUES($1,$2,$3,$4,$5)", [
         c.tenant,
-        randomUUID(),
+        id,
         i.subject_id,
         i.basis,
         i.until_at,
       ]);
-      return { ok: true };
+      await audit(db, c.tenant, c.actor, "hold.created", {
+        id,
+        subject_id: i.subject_id,
+        until_at: i.until_at,
+      });
+      return { ok: true, id };
     });
   });
   app.post("/v1/retention-purge", async (req) => {
@@ -75,6 +82,7 @@ export async function operationRoutes(app: FastifyInstance) {
     permit(c, "deletion:write");
     const i = z.object({ subject_id: z.uuid() }).strict().parse(req.body);
     return transaction(c.tenant, async (db) => {
+      await owned(db, "subjects", i.subject_id);
       await db.query("SELECT purge_retained_subject($1,$2)", [
         c.tenant,
         i.subject_id,
@@ -309,9 +317,10 @@ export async function operationRoutes(app: FastifyInstance) {
           )
         ).rows;
         for (const c of contacts) {
+          // Only granted scopes change; re-revoking would add duplicate processing-result notices.
           const states = (
             await db.query(
-              "SELECT * FROM consent_current WHERE contact_id=$1",
+              "SELECT * FROM consent_current WHERE contact_id=$1 AND state='GRANTED'",
               [c.id],
             )
           ).rows;
@@ -348,7 +357,7 @@ export async function operationRoutes(app: FastifyInstance) {
       rows: z
         .array(
           z.object({
-            external_id: z.string().min(1).max(100),
+            external_id: externalId,
             phone: z.string().regex(/^010[0-9]{8}$/),
             state: z.enum(["granted", "denied", "revoked"]),
           }),
@@ -362,31 +371,48 @@ export async function operationRoutes(app: FastifyInstance) {
     const c = await auth(req);
     permit(c, "consent:write");
     const raw = req.body as Record<string, unknown>;
+    let rows: unknown = raw?.rows;
+    if (typeof raw?.csv === "string") {
+      try {
+        rows = parse(raw.csv, {
+          columns: true,
+          skip_empty_lines: true,
+          trim: true,
+        });
+      } catch {
+        fail("CSV_INVALID");
+      }
+    }
     const i = importSchema.parse(
       typeof raw?.csv === "string"
-        ? {
-            rows: parse(raw.csv, {
-              columns: true,
-              skip_empty_lines: true,
-              trim: true,
-            }),
-            commit: raw.commit ?? false,
-          }
+        ? { rows, commit: raw.commit ?? false }
         : raw,
     );
     const duplicates =
       i.rows.length - new Set(i.rows.map((r) => r.external_id)).size;
     if (duplicates) fail("DUPLICATE_IMPORT_MEMBERS");
-    const summary = {
-      rows: i.rows.length,
-      unverified: i.rows.filter((r) => r.state === "granted").length,
-      suppressions: i.rows.filter((r) => r.state !== "granted").length,
-    };
-    if (!i.commit) return { ...summary, preview: true };
     return transaction(c.tenant, async (db) => {
+      // Legacy rows must never overwrite members who already exist in the ledger.
+      const existing = (
+        await db.query(
+          "SELECT external_id FROM subjects WHERE external_id=ANY($1::text[]) ORDER BY external_id",
+          [i.rows.map((r) => r.external_id)],
+        )
+      ).rows.map((r) => r.external_id as string);
+      const summary = {
+        rows: i.rows.length,
+        unverified: i.rows.filter((r) => r.state === "granted").length,
+        suppressions: i.rows.filter((r) => r.state !== "granted").length,
+        existing: existing.length,
+        existing_ids: existing.slice(0, 20),
+      };
+      if (!i.commit) return { ...summary, preview: true };
+      if (existing.length)
+        fail("IMPORT_MEMBERS_EXIST", 409, existing.slice(0, 20));
       const {
         rows: [purpose],
       } = await db.query("SELECT * FROM purposes WHERE key='ad_sms'");
+      if (!purpose) fail("PURPOSE_NOT_CONFIGURED", 409);
       for (const [n, row] of [...i.rows]
         .sort(
           (a, b) =>
@@ -413,19 +439,20 @@ export async function operationRoutes(app: FastifyInstance) {
           { legacy: true, source: "legacy_import" },
         );
       }
-      await audit(db, c.tenant, c.actor, "import.completed", summary);
+      const { existing_ids: _ids, ...counts } = summary;
+      await audit(db, c.tenant, c.actor, "import.completed", counts);
       return { ...summary, preview: false };
     });
   });
   app.post("/v1/tenant/suspend", async (req) => {
     const c = await auth(req);
     permit(c, "org:write");
-    await pool.query("UPDATE tenants SET status='suspended' WHERE id=$1", [
-      c.tenant,
-    ]);
-    await transaction(c.tenant, (db) =>
-      audit(db, c.tenant, c.actor, "tenant.suspended"),
-    );
+    await transaction(c.tenant, async (db) => {
+      await db.query("UPDATE tenants SET status='suspended' WHERE id=$1", [
+        c.tenant,
+      ]);
+      await audit(db, c.tenant, c.actor, "tenant.suspended");
+    });
     return { ok: true };
   });
 }

@@ -1,0 +1,128 @@
+{
+  "events": [
+    {
+      "id": "c102c80b-928f-4db3-9daa-3ac71ea06636",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "denied",
+      "revision": 1,
+      "received_at": "2026-10-01T02:04:07.564Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    },
+    {
+      "id": "d2706fe7-cd1f-4c5a-ac04-6f84ce302aa5",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "denied",
+      "revision": 1,
+      "received_at": "2026-10-01T02:04:07.574Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    },
+    {
+      "id": "d837c5a7-108b-4ffd-ad89-ecf8b3572840",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "granted",
+      "revision": 2,
+      "received_at": "2026-10-01T02:04:08.934Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    },
+    {
+      "id": "e3fb30ae-7068-4c2e-9a8f-a759e960c2ba",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "denied",
+      "revision": 2,
+      "received_at": "2026-10-01T02:04:08.944Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    },
+    {
+      "id": "fb2f7c63-0403-4b85-889e-9e17f4ca6bf1",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "granted",
+      "revision": 3,
+      "received_at": "2026-10-01T02:04:10.337Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    },
+    {
+      "id": "ef11f3e6-64d3-499f-b954-63b5602ca3d2",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "granted",
+      "revision": 3,
+      "received_at": "2026-10-01T02:04:10.342Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    },
+    {
+      "id": "0508ecf8-31b1-4ce0-b81d-d7810b378afb",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "revoked",
+      "revision": 4,
+      "received_at": "2026-10-01T02:04:10.506Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    },
+    {
+      "id": "14168b5a-de60-4c0d-8397-80818a85e3a6",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "revoked",
+      "revision": 4,
+      "received_at": "2026-10-01T02:04:10.511Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    },
+    {
+      "id": "a363bb01-4766-4153-a070-e8346c87c5b1",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "granted",
+      "revision": 5,
+      "received_at": "2026-10-01T02:04:10.824Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    },
+    {
+      "id": "d2821c16-a4aa-40e2-b350-d1cc16df5e73",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "granted",
+      "revision": 5,
+      "received_at": "2026-10-01T02:04:10.830Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    },
+    {
+      "id": "a63a931d-4d75-40c5-998b-eaa7ae10eaca",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "revoked",
+      "revision": 6,
+      "received_at": "2026-10-01T02:04:10.938Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    },
+    {
+      "id": "599a0a84-661b-4b8e-be9e-b23e8495cad1",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "revoked",
+      "revision": 6,
+      "received_at": "2026-10-01T02:04:10.949Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    },
+    {
+      "id": "af4372ed-4137-4498-9823-1c621290a56d",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "revoked",
+      "revision": 7,
+      "received_at": "2026-10-01T02:04:12.504Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    },
+    {
+      "id": "dfbedafb-0d46-4adc-8b2e-1ebf41c73928",
+      "subject_id": "1e8d20fe-eae7-498f-9c9c-606e16ec33eb",
+      "action": "revoked",
+      "revision": 7,
+      "received_at": "2026-10-01T02:04:12.509Z",
+      "source": "web:ac7d7719-7207-4af2-8e73-d709a275672a:v1"
+    }
+  ],
+  "current": [
+    {
+      "state": "REVOKED",
+      "key": "advertising",
+      "revision": 7
+    },
+    {
+      "state": "REVOKED",
+      "key": "analytics",
+      "revision": 7
+    }
+  ]
+}

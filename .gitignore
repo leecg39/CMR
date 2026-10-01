@@ -4,3 +4,4 @@ dist/
 .local/
 *.log
 artifacts/*.json
+artifacts/poc/**/synthetic-backup.enc

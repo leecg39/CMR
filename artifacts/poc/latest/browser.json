@@ -1,0 +1,303 @@
+{
+  "started_at": "2026-09-30T22:03:31.706Z",
+  "status": "passed",
+  "scenarios": [
+    {
+      "name": "미선택",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "panelHidden": false,
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "전체 거절",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "panelHidden": true,
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "거절 후 재방문",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "panelHidden": true,
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "분석만 허용",
+      "choices": {
+        "analytics": true,
+        "advertising": false
+      },
+      "requests": [
+        "analytics"
+      ],
+      "executed": [
+        "analytics"
+      ],
+      "panelHidden": true,
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "granted",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "분석만 허용 후 재방문",
+      "choices": {
+        "analytics": true,
+        "advertising": false
+      },
+      "requests": [
+        "analytics"
+      ],
+      "executed": [
+        "analytics"
+      ],
+      "panelHidden": true,
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "granted",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "전체 허용",
+      "choices": {
+        "analytics": true,
+        "advertising": true
+      },
+      "requests": [
+        "advertising",
+        "analytics"
+      ],
+      "executed": [
+        "advertising",
+        "analytics"
+      ],
+      "panelHidden": true,
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "granted",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "granted",
+            "ad_storage": "granted",
+            "ad_user_data": "granted",
+            "ad_personalization": "granted"
+          }
+        }
+      ]
+    },
+    {
+      "name": "전체 허용 후 재방문",
+      "choices": {
+        "analytics": true,
+        "advertising": true
+      },
+      "requests": [
+        "advertising",
+        "analytics"
+      ],
+      "executed": [
+        "advertising",
+        "analytics"
+      ],
+      "panelHidden": true,
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "granted",
+            "ad_storage": "granted",
+            "ad_user_data": "granted",
+            "ad_personalization": "granted"
+          }
+        }
+      ]
+    },
+    {
+      "name": "허용 후 철회",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "activeTags": 0,
+      "already_executed_scripts_need_reload": true
+    },
+    {
+      "name": "철회 후 재방문",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "panelHidden": true,
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    }
+  ],
+  "finished_at": "2026-09-30T22:04:04.777Z"
+}

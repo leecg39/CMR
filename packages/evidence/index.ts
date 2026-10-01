@@ -68,7 +68,17 @@ export async function requestDeletion(
   reason: string,
 ) {
   permit(ctx, "deletion:write");
-  await owned(db, "subjects", subject);
+  const target = await owned(db, "subjects", subject);
+  if (target.deleted_at) fail("SUBJECT_ALREADY_DELETED", 409);
+  if (
+    (
+      await db.query(
+        "SELECT 1 FROM deletion_requests WHERE subject_id=$1 AND status<>'completed'",
+        [subject],
+      )
+    ).rowCount
+  )
+    fail("DELETION_ALREADY_REQUESTED", 409);
   const { rows: states } = await db.query(
     "SELECT * FROM consent_current WHERE subject_id=$1 AND state='GRANTED'",
     [subject],
@@ -115,6 +125,9 @@ export async function confirmDeletionTask(
   permit(ctx, "deletion:write");
   const task = await owned(db, "deletion_tasks", id),
     request = await owned(db, "deletion_requests", task.request_id);
+  // A confirmed task is final: re-running would erase again and duplicate the immutable journal.
+  if (task.status === "verified" || task.status === "retained")
+    fail("TASK_ALREADY_CONFIRMED", 409);
   if (proof.trim().length < 10) fail("EVIDENCE_REQUIRED");
   if (task.system === "cmp") {
     await db.query(

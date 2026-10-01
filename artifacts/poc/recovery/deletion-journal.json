@@ -1,0 +1,4 @@
+{
+  "payload": "{\"version\":1,\"tenant\":\"05361c82-56cd-4f96-bdad-6abb0a33699c\",\"deletions\":[{\"subject_id\":\"30ce61a2-35d8-4381-bc1e-789800e6bda4\",\"deleted_at\":\"2026-10-01T02:05:14.872Z\"}]}",
+  "signature": "1a5413e679579e920f56d45a85c82952acc63356509b0bedc80855c28f87b447"
+}

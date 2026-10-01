@@ -18,9 +18,25 @@ services:
     environment:
       SCAN_EGRESS_PROXY: http://egress:4322
       SCAN_RUNNER_TOKEN: ${SCAN_RUNNER_TOKEN:?Set a scanner-only secret}
-    ports:
-      - 127.0.0.1:4321:4321
     networks: [isolated]
+  gateway:
+    build:
+      context: .
+      dockerfile: apps/scanner/Dockerfile
+    command: [node, --import, tsx, apps/scanner/gateway.ts]
+    init: true
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      SCAN_RUNNER_TOKEN: ${SCAN_RUNNER_TOKEN:?Set a scanner-only secret}
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 64
+    ports:
+      - 127.0.0.1:4321:4323
+    networks: [isolated, internet]
   egress:
     build:
       context: .

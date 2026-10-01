@@ -1,0 +1,153 @@
+{
+  "started_at": "2026-10-01T02:02:37.205Z",
+  "source_sha256": "e30db8bdab2a064330616e849198f331a3d57e9acd5551dfc729941a828ee163",
+  "checks": [
+    {
+      "name": "비소유자 역할과 모든 고객사 테이블의 FORCE RLS",
+      "status": "passed",
+      "details": {
+        "tables": [
+          "agreement_events",
+          "agreement_versions",
+          "audit_log",
+          "connectors",
+          "consent_current",
+          "consent_events",
+          "contact_points",
+          "controllers",
+          "decisions",
+          "deletion_journal",
+          "deletion_requests",
+          "deletion_tasks",
+          "holds",
+          "identity_links",
+          "message_jobs",
+          "notices",
+          "notification_jobs",
+          "outbox",
+          "provider_events",
+          "provider_receipts",
+          "purposes",
+          "retention_policies",
+          "scans",
+          "sites",
+          "subjects",
+          "suppressions",
+          "templates",
+          "web_configs"
+        ]
+      }
+    },
+    {
+      "name": "테이블 소유자와 FORCE RLS 누락 시 API 시작 거부",
+      "status": "passed",
+      "details": {
+        "rejected_configs": [
+          "tenant table owner",
+          "FORCE RLS disabled"
+        ]
+      }
+    },
+    {
+      "name": "동일 외부 ID와 전화번호의 고객사 분리",
+      "status": "passed"
+    },
+    {
+      "name": "DB 교차 조회·쓰기·외래키 참조와 풀 재사용 격리",
+      "status": "passed"
+    },
+    {
+      "name": "실패한 철회의 이벤트·상태·거부·통지·outbox 전체 롤백",
+      "status": "passed",
+      "details": {
+        "before": {
+          "consent_events": "2",
+          "consent_current": "2",
+          "suppressions": "2",
+          "notification_jobs": "2",
+          "outbox": "0",
+          "audit_log": "2",
+          "state": {
+            "state": "GRANTED",
+            "revision": 1,
+            "last_event_id": "be291e91-cd3b-4daa-9fac-2a977179abdd"
+          }
+        },
+        "after_equal": true
+      }
+    },
+    {
+      "name": "실제 HTTP 서버의 PostgreSQL 연결과 데모 경로 차단",
+      "status": "passed",
+      "details": {
+        "ok": true,
+        "storage": "postgresql",
+        "mode": "production"
+      }
+    },
+    {
+      "name": "실제 HTTP의 다른 고객사 증빙·회원·수정 차단과 범위 검증",
+      "status": "passed"
+    },
+    {
+      "name": "동시 HTTP 재전송 8건이 서버 원장·통지에 한 번만 반영",
+      "status": "passed",
+      "details": {
+        "concurrent_requests": 8,
+        "unique_event_count": 1,
+        "event_id": "096e09ba-7211-4c00-ab78-2eeabea0c995",
+        "received_at": "2026-10-01T02:02:39.530Z",
+        "revision": 2
+      }
+    },
+    {
+      "name": "원장·게시 문구·감사 기록의 직접 수정과 삭제 차단",
+      "status": "passed",
+      "details": {
+        "blocked_mutations": 6
+      }
+    },
+    {
+      "name": "별도 API 프로세스 재시작 후 서버 기록·문구·철회 유지",
+      "status": "passed",
+      "details": {
+        "event_id": "096e09ba-7211-4c00-ab78-2eeabea0c995",
+        "sha256": "78a95e4f6e7e38aaa19b1106769aa800237d9d10d340eb82d6bc02e57a88635d",
+        "other_customer_unchanged": true
+      }
+    },
+    {
+      "name": "브라우저 선택의 서버 원본과 마지막 철회 상태",
+      "status": "passed",
+      "details": {
+        "events": 14,
+        "final_states": [
+          {
+            "state": "REVOKED",
+            "key": "advertising",
+            "revision": 7
+          },
+          {
+            "state": "REVOKED",
+            "key": "analytics",
+            "revision": 7
+          }
+        ]
+      }
+    }
+  ],
+  "status": "passed",
+  "environment": {
+    "node": "v22.23.1",
+    "postgres": "PostgreSQL 17.11 (Homebrew) on aarch64-apple-darwin25.5.0, compiled by Apple clang version 21.0.0 (clang-2100.1.1.101), 64-bit",
+    "synthetic": true,
+    "real_messages_sent": false
+  },
+  "browser": {
+    "url": "http://127.0.0.1:53024/demo?key=ed91f9eb-8c8f-4c9e-a89c-e7e20ebba0fc.C5fTvPfAhBVJDuSoiJqCh32a4f8pO_m2kmK9mZq--E0",
+    "tenant_id": "ed91f9eb-8c8f-4c9e-a89c-e7e20ebba0fc",
+    "site_id": "ac7d7719-7207-4af2-8e73-d709a275672a"
+  },
+  "cleanup": "temporary database and role removed",
+  "finished_at": "2026-10-01T02:05:12.027Z"
+}

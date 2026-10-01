@@ -53,6 +53,12 @@ export async function applyJournal(bundle: {
         "UPDATE message_jobs SET status='cancelled',reasons=ARRAY['DELETION_REAPPLIED'] WHERE subject_id=$1 AND status='queued'",
         [item.subject_id],
       );
+      // Restored backups can predate this deletion. Keep the signed history in
+      // the restored ledger so the next export cannot silently forget it.
+      await db.query(
+        "INSERT INTO deletion_journal(tenant_id,id,subject_id,deleted_at) SELECT $1,$2,$3,$4::timestamptz WHERE NOT EXISTS(SELECT 1 FROM deletion_journal WHERE subject_id=$3)",
+        [d.tenant, randomUUID(), item.subject_id, item.deleted_at],
+      );
     }
     await audit(db, d.tenant, "recovery", "deletion_journal.reapplied", {
       count: d.deletions.length,

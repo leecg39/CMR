@@ -309,6 +309,53 @@ test("T18 삭제 이후 복구된 자료에 외부 보관 삭제 이력을 재�
   });
   await assert.rejects(applyJournal({ ...journal, signature: "fake" }));
 });
+test("복원 DB에 없던 삭제 이력은 재적용 후 다시 내보내며 반복 적용은 중복하지 않는다", async () => {
+  const f = await fixture();
+  assert.equal(
+    JSON.parse((await exportJournal(f.tenant)).payload).deletions.length,
+    0,
+  );
+  const data = {
+    version: 1,
+    tenant: f.tenant,
+    deletions: [
+      { subject_id: f.subject, deleted_at: "2026-09-30T02:00:00.000Z" },
+    ],
+  };
+  const payload = JSON.stringify(data);
+  const journal = {
+    payload,
+    signature: createHmac("sha256", process.env.SESSION_SECRET!)
+      .update(payload)
+      .digest("hex"),
+  };
+  const applied = await Promise.all([
+    applyJournal(journal),
+    applyJournal(journal),
+  ]);
+  assert.ok(applied.every((result) => result.reapplied === 1));
+  const exported = await exportJournal(f.tenant);
+  assert.deepEqual(JSON.parse(exported.payload), data);
+  await transaction(f.tenant, async (db) => {
+    assert.equal(
+      (
+        await db.query(
+          "SELECT count(*) FROM deletion_journal WHERE subject_id=$1",
+          [f.subject],
+        )
+      ).rows[0].count,
+      "1",
+    );
+    assert.equal(
+      (
+        await db.query("SELECT encrypted FROM contact_points WHERE id=$1", [
+          f.contact,
+        ])
+      ).rows[0].encrypted,
+      "",
+    );
+  });
+});
 test("웹 설정은 검증된 Origin에서만 제공되며 사이트 세션으로 SMS를 변경할 수 없다", async () => {
   const f = await fixture(),
     site = randomUUID(),
@@ -390,6 +437,91 @@ test("웹 설정은 검증된 Origin에서만 제공되며 사이트 세션으�
     ).statusCode,
     401,
   );
+});
+test("웹 선택 재전송은 단일 원본을 유지하고 철회 뒤 과거 허용 재전송은 태그를 허용하지 않는다", async () => {
+  const f = await fixture(),
+    site = randomUUID(),
+    publicKey = f.tenant + "." + token();
+  await transaction(f.tenant, async (db) => {
+    await db.query(
+      "INSERT INTO sites(tenant_id,id,controller_id,domain,verification_token,verified_at,public_key) VALUES($1,$2,$3,'retry.example.test','test',now(),$4)",
+      [f.tenant, site, f.controller, publicKey],
+    );
+    await db.query(
+      "INSERT INTO web_configs(tenant_id,id,site_id,version,notice,tags,status,published_at) VALUES($1,$2,$3,1,'분석과 광고 선택','[]','published',now())",
+      [f.tenant, randomUUID(), site],
+    );
+  });
+  const headers = {
+    host: "127.0.0.1:4310",
+    origin: "https://retry.example.test",
+  };
+  const config = (
+    await app.inject({ url: "/v1/web/config?key=" + publicKey, headers })
+  ).json();
+  const subject = JSON.parse(
+    Buffer.from(config.session.split(".")[0], "base64url").toString(),
+  ).subject;
+  const send = (
+    id: string,
+    choices: { analytics: boolean; advertising: boolean },
+  ) =>
+    app.inject({
+      method: "POST",
+      url: "/v1/web/consent",
+      headers,
+      payload: {
+        key: publicKey,
+        session: config.session,
+        version: 1,
+        choices,
+        idempotency_key: id,
+      },
+    });
+  const denied = { analytics: false, advertising: false },
+    allowed = { analytics: true, advertising: true };
+  const records = () =>
+    transaction(f.tenant, async (db) => ({
+      events: (
+        await db.query(
+          "SELECT * FROM consent_events WHERE subject_id=$1 ORDER BY seq",
+          [subject],
+        )
+      ).rows,
+      current: (
+        await db.query(
+          "SELECT state FROM consent_current WHERE subject_id=$1",
+          [subject],
+        )
+      ).rows,
+    }));
+  const concurrent = await Promise.all(
+    Array.from({ length: 8 }, () => send("initial-refusal", denied)),
+  );
+  for (const response of concurrent)
+    assert.equal(response.statusCode, 200, response.body);
+  const first = await records();
+  assert.equal(first.events.length, 2);
+  const retry = await send("initial-refusal", denied);
+  assert.equal(retry.statusCode, 200, retry.body);
+  assert.deepEqual(await records(), first);
+  assert.ok(first.current.every((s) => s.state === "DENIED"));
+  assert.equal((await send("initial-refusal", allowed)).statusCode, 409);
+  assert.equal((await send("allow", allowed)).statusCode, 200);
+  const granted = await records();
+  assert.equal((await send("allow", allowed)).statusCode, 200);
+  assert.deepEqual(await records(), granted);
+  assert.equal((await send("withdraw", denied)).statusCode, 200);
+  const revoked = await records();
+  assert.equal(revoked.events.length, 6);
+  assert.ok(revoked.current.every((s) => s.state === "REVOKED"));
+  assert.ok(revoked.events.slice(-2).every((e) => e.action === "revoked"));
+  assert.equal((await send("withdraw", denied)).statusCode, 200);
+  assert.deepEqual(await records(), revoked);
+  const historical = await send("allow", allowed);
+  assert.equal(historical.statusCode, 200, historical.body);
+  assert.deepEqual(historical.json().choices, denied);
+  assert.deepEqual(await records(), revoked);
 });
 test("약관 수락은 개인정보 및 광고 수신 동의와 다른 원장에 기록된다", async () => {
   const f = await fixture({ sms: false }),

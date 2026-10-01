@@ -1,0 +1,68 @@
+{
+  "checked_at": "2026-10-01T02:21:38.951Z",
+  "status": "authorized_local_work_complete",
+  "scope": "설치 확인·서버 기록과 고객사 격리·동의 코어·최신 웹 CMP·합성 백업 복구 PoC·후속 출시 문서",
+  "user_deferred": [
+    "문자·080 실연동",
+    "파일럿 검증"
+  ],
+  "source_sha256": "5ecbcf5436139ebe3599de8cc41a929abed29421fc28398bc9d9691fa9d1fa4c",
+  "sdk_sha256": "f8d73e35e18ebd44e4cc06bdb06a11e8889c3d08723fb936f4526bc4374a1d81",
+  "verification": {
+    "tests": {
+      "passed": 62,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build": "passed",
+    "browser": {
+      "passed": 16,
+      "server_events": 14,
+      "final_states": [
+        {
+          "state": "REVOKED",
+          "key": "advertising",
+          "revision": 7
+        },
+        {
+          "state": "REVOKED",
+          "key": "analytics",
+          "revision": 7
+        }
+      ]
+    },
+    "recovery": {
+      "passed": 13,
+      "restored_tables": 33,
+      "temporary_databases_and_roles_removed": true
+    },
+    "scanner": {
+      "passed": 7,
+      "configuration_sha256": "ab8b8c15d19ab04f1e61cfc94bb8ada26538fe81c16908429cf8223069e6c46b"
+    },
+    "dependency_audit": {
+      "known_production_vulnerabilities": 0
+    }
+  },
+  "runtime": {
+    "checked_at": "2026-10-01T02:21:38.951Z",
+    "url": "http://127.0.0.1:4310/",
+    "http_status": 200,
+    "health": {
+      "ok": true,
+      "storage": "postgresql",
+      "mode": "demo"
+    },
+    "real_messages_enabled": false
+  },
+  "production_release_allowed": false,
+  "evidence": [
+    "web/browser.json",
+    "web/browser-server-records.json",
+    "recovery/http.json",
+    "recovery/backup-table-fingerprints.json",
+    "scanner.json",
+    "../poc-tests-2026-10-01.log",
+    "../poc-build-2026-10-01.log"
+  ]
+}

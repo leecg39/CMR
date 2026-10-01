@@ -46,13 +46,22 @@ HMAC 요청, 목록 스키마, 페이지 루프, 타임아웃은 모의 응답�
 docker compose -f compose.scanner.yml up --build -d
 ```
 
-스캐너에는 DB·문자 공급자·마스터 키를 넘기지 않습니다. Chromium은 비루트 사용자·sandbox·읽기 전용 루트·제한된 CPU/메모리·네트워크에서 실행하도록 구성했습니다. 외부 네트워크는 별도 egress 컨테이너만 연결됩니다. 프록시는 HTTPS CONNECT의 모든 DNS 응답을 확인하고 공인 IPv4 한 주소로 연결을 고정합니다. 사설 IP, 메타데이터, IPv6 우회, 공인/사설 혼합 응답, 비443 포트는 거절합니다.
+스캐너에는 DB·문자 공급자·마스터 키를 넘기지 않습니다. Chromium은 비루트 사용자·sandbox·읽기 전용 루트·제한된 CPU/메모리·내부 격리망에서 실행합니다. 별도 egress 프록시와 인증된 API 게이트웨이가 격리망과 외부망에 연결됩니다. 호스트의 127.0.0.1:4321은 게이트웨이로 들어오고, 게이트웨이는 고정된 내부 scanner:4321/scan으로만 요청을 전달합니다. 브라우저 컨테이너에는 외부망을 연결하지 않습니다. 프록시는 HTTPS CONNECT의 모든 DNS 응답을 확인하고 공인 IPv4 한 주소로 연결을 고정합니다. 사설 IP, 메타데이터, IPv6 우회, 공인/사설 혼합 응답, 비443 포트는 거절합니다.
 
 검사는 소유 확인된 사이트의 게시 설정을 사용해 미선택·거절·분석만·전체 허용·철회 후 재방문을 비교합니다. 요청은 query와 fragment를 제거한 경로로, 쿠키는 이름과 도메인만 기록합니다. 인증된 사용자 정보나 실제 고객 비밀번호를 입력하지 않습니다.
 
-현재 Mac에서 Docker 서비스가 실행되지 않아 이미지 빌드·컨테이너 실행은 검증하지 못했습니다. Linux 호스트의 seccomp/user namespace 지원이 필요합니다. 지원되지 않아 Chromium sandbox가 시작되지 않으면 실패로 남기며 `--no-sandbox`로 우회하지 않습니다.
+2026-10-01에 별도 Lima `cmp-poc` 환경(Linux 6.8, Docker 29.8.2, Compose 5.5.1)에서 이미지 빌드·실행, UID 1001 Chromium sandbox, 직접 공인 IP 연결 거부, 프록시 HTTPS 허용, 사설·메타데이터·비443·IPv6 대상 거부와 호스트 API 인증을 확인했습니다. 결과는 `artifacts/poc/scanner.json`입니다. 실제 고객 사이트의 등록 태그 검증은 별도로 필요합니다. 운영 Linux에서도 seccomp/user namespace 지원을 확인하고 sandbox 초기화가 실패하면 검사 실패로 남깁니다.
 
-`apps/scanner/seccomp.json`은 Playwright v1.63.0의 공식 프로필입니다. 출처: https://github.com/microsoft/playwright/blob/v1.63.0/utils/docker/seccomp_profile.json (Apache-2.0).
+`apps/scanner/seccomp.json`은 [Playwright v1.63.0 공식 프로필](https://github.com/microsoft/playwright/blob/v1.63.0/utils/docker/seccomp_profile.json)(Apache-2.0)을 바탕으로 한 프로필입니다. 컨테이너 capabilities를 모두 제거한 상태에서도 Chromium 내부 user namespace의 chroot가 가능하도록 해당 syscall을 허용했습니다. 커널의 권한 검사는 유지되며 컨테이너에 CAP_SYS_CHROOT를 추가하지 않습니다. Chromium의 해당 초기화 동작은 [원본 코드](https://chromium.googlesource.com/chromium/src/sandbox/+/refs/heads/main/linux/services/credentials.cc)에서 확인할 수 있습니다.
+
+PoC 환경을 다시 사용할 때는 `limactl start cmp-poc` 후 아래 명령을 실행합니다. `.local/scanner-poc.env`는 스캐너 전용 시험 토큰 파일이며 Git에서 제외됩니다.
+
+```sh
+LIMA_INSTANCE=cmp-poc docker compose --env-file .local/scanner-poc.env -p cmp-poc -f compose.scanner.yml up --build -d
+LIMA_INSTANCE=cmp-poc node scripts/scanner-poc.mjs
+LIMA_INSTANCE=cmp-poc docker compose --env-file .local/scanner-poc.env -p cmp-poc -f compose.scanner.yml down
+limactl stop cmp-poc
+```
 
 ## 삭제와 복구
 
@@ -68,7 +77,9 @@ npx tsx scripts/deletion-journal.ts export TENANT_UUID /secure-separate-volume/d
 npx tsx scripts/deletion-journal.ts apply /secure-separate-volume/deletions.json
 ```
 
-복구 테스트는 이전 상태가 다시 들어온 상황에서 삭제 이력을 재적용하여 연락처를 다시 지우고 사용을 차단하는 절차를 실제 PostgreSQL에서 확인했습니다. 전체 운영 DB·객체 저장소·백업 매체의 복원 훈련을 대신하지 않습니다.
+삭제 이력 재적용은 복원된 DB의 삭제 원장에도 누락된 이력을 남깁니다. 다음 내보내기에서 삭제 기록이 빠지지 않으며, 같은 이력을 다시 적용해도 원장을 중복하지 않습니다.
+
+`npm run poc:recovery`는 작업 DB와 분리된 합성 전체 DB를 실제 pg_dump로 백업하고, 메모리에서 AES-256-GCM으로 암호화한 뒤 새 DB에 pg_restore로 복원합니다. 33개 public 테이블의 행 지문·비소유자 API·RLS·불변 원장과, 백업 이후 삭제의 재적용·예약 취소·광고 차단·재내보내기 보존을 확인했습니다. 결과는 `artifacts/poc/recovery/http.json`입니다. 시험 키는 실행 후 폐기하므로 생성된 암호문을 운영 백업으로 사용하지 않습니다. 전체 운영 DB·객체 저장소·별도 백업 매체와 실제 키 복구 훈련은 남아 있습니다.
 
 ## 장애 시
 

@@ -13,7 +13,7 @@ import {
   hash,
   token,
   permit,
-  safeEqual,
+  passwordHash,
   type Context,
 } from "../../packages/consent-domain/common.js";
 import {
@@ -21,7 +21,7 @@ import {
   login,
   beginMfa,
   finishMfa,
-  newUser,
+  normalizeEmail,
 } from "../../packages/consent-domain/auth.js";
 import {
   recordConsent,
@@ -50,10 +50,37 @@ const ctxFor = (r: FastifyRequest) =>
     r.cookies[cookieName],
     r.headers.authorization?.replace(/^Bearer /, ""),
   );
+// Database triggers and the purge function refuse business actions with RAISE EXCEPTION (P0001).
+const databaseRefusals: Record<string, string> = {
+  "retention period has not ended": "RETENTION_PERIOD_ACTIVE",
+  "legal hold active": "LEGAL_HOLD_ACTIVE",
+  "external deletion unconfirmed": "DELETION_UNCONFIRMED",
+  "unconfirmed deletion tasks": "DELETION_UNCONFIRMED",
+  "approved retention policy required": "RETENTION_POLICY_REQUIRED",
+  "published version is immutable": "PUBLISHED_IMMUTABLE",
+  "approved template is immutable": "APPROVED_IMMUTABLE",
+  "immutable record: append a correction": "IMMUTABLE_RECORD",
+};
+const clientErrors: Record<number, string> = {
+  413: "PAYLOAD_TOO_LARGE",
+  415: "UNSUPPORTED_MEDIA_TYPE",
+  429: "RATE_LIMITED",
+};
 export async function buildApp() {
   const app = Fastify({ logger: false, bodyLimit: 262144, trustProxy: false });
   await app.register(cookie);
   await app.register(rateLimit, { max: 120, timeWindow: "1 minute" });
+  const localOrigin = ["127.0.0.1", "localhost"].includes(
+    new URL(process.env.APP_ORIGIN ?? "http://127.0.0.1:4310").hostname,
+  );
+  const setSession = (reply: any, secret: string) =>
+    reply.setCookie(cookieName, secret, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.APP_ORIGIN?.startsWith("https:"),
+      path: "/",
+      maxAge: 28800,
+    });
   app.setErrorHandler((e: any, _req, reply) => {
     if (e instanceof z.ZodError)
       return reply.code(400).send({
@@ -62,12 +89,29 @@ export async function buildApp() {
         details: e.issues.map((i) => ({ path: i.path, message: i.message })),
       });
     if (e instanceof AppError)
-      return reply.code(e.status).send({ code: e.code, error: e.code });
+      return reply.code(e.status).send({
+        code: e.code,
+        error: e.code,
+        ...(e.details ? { details: e.details } : {}),
+      });
     if (e.code === "23505") return reply.code(409).send({ code: "CONFLICT" });
     if (e.code === "23503")
       return reply.code(400).send({ code: "INVALID_REFERENCE" });
-    if (e.statusCode === 429)
-      return reply.code(429).send({ code: "RATE_LIMITED" });
+    if (e.code === "23514" || e.code === "22P02" || e.code === "22007")
+      return reply.code(400).send({ code: "INVALID_INPUT" });
+    if (e.code === "P0001")
+      return reply
+        .code(409)
+        .send({ code: databaseRefusals[e.message] ?? "STATE_CONFLICT" });
+    // Fastify parser/limit errors (malformed JSON, body too large, media type) are client errors, not outages.
+    if (
+      typeof e.statusCode === "number" &&
+      e.statusCode >= 400 &&
+      e.statusCode < 500
+    )
+      return reply
+        .code(e.statusCode)
+        .send({ code: clientErrors[e.statusCode] ?? "INVALID_REQUEST" });
     console.error("request failed", e.code ?? e.name);
     return reply.code(503).send({
       code: "SERVICE_UNAVAILABLE",
@@ -78,7 +122,9 @@ export async function buildApp() {
     reply
       .header("Cache-Control", "private, no-store")
       .header("X-Content-Type-Options", "nosniff")
-      .header("Referrer-Policy", "same-origin");
+      .header("Referrer-Policy", "same-origin")
+      .header("X-Frame-Options", "DENY")
+      .header("Content-Security-Policy", "frame-ancestors 'none'");
     const host = req.headers.host?.split(":")[0],
       allowed = new URL(process.env.APP_ORIGIN ?? "http://127.0.0.1:4310")
         .hostname;
@@ -91,10 +137,14 @@ export async function buildApp() {
       !req.headers.authorization
     ) {
       const origin = req.headers.origin;
+      // The Vite dev server origins are accepted only for a local APP_ORIGIN.
       if (
         origin !== process.env.APP_ORIGIN &&
-        origin !== "http://127.0.0.1:5178" &&
-        origin !== "http://localhost:5178"
+        !(
+          localOrigin &&
+          (origin === "http://127.0.0.1:5178" ||
+            origin === "http://localhost:5178")
+        )
       )
         fail("ORIGIN_REQUIRED", 403);
     }
@@ -123,13 +173,7 @@ export async function buildApp() {
         .strict()
         .parse(req.body);
       const secret = await login(i.email, i.password, i.code);
-      reply.setCookie(cookieName, secret, {
-        httpOnly: true,
-        sameSite: "strict",
-        secure: process.env.APP_ORIGIN?.startsWith("https:"),
-        path: "/",
-        maxAge: 28800,
-      });
+      setSession(reply, secret);
       return { ok: true };
     },
   );
@@ -137,12 +181,7 @@ export async function buildApp() {
     if (process.env.DEMO_MODE !== "true") fail("NOT_FOUND", 404);
     const data = JSON.parse(fs.readFileSync(".local/demo-access.json", "utf8"));
     const secret = await login(data.email, data.password);
-    reply.setCookie(cookieName, secret, {
-      httpOnly: true,
-      sameSite: "strict",
-      path: "/",
-      maxAge: 28800,
-    });
+    setSession(reply, secret);
     return { ok: true };
   });
   app.post("/v1/auth/logout", async (req, reply) => {
@@ -156,7 +195,7 @@ export async function buildApp() {
     const ctx = await ctxFor(req);
     if (ctx.role === "api") fail("FORBIDDEN", 403);
     const { rows: tenants } = await pool.query(
-      "SELECT t.id,t.name,t.plan,m.role FROM memberships m JOIN tenants t ON t.id=m.tenant_id WHERE user_id=$1",
+      "SELECT t.id,t.name,t.plan,t.status,t.ad_limit,m.role FROM memberships m JOIN tenants t ON t.id=m.tenant_id WHERE user_id=$1 ORDER BY t.name",
       [ctx.actor],
     );
     const {
@@ -170,6 +209,7 @@ export async function buildApp() {
   app.post("/v1/auth/tenant", async (req) => {
     const ctx = await ctxFor(req),
       i = z.object({ tenant_id: z.uuid() }).strict().parse(req.body);
+    if (ctx.role === "api") fail("FORBIDDEN", 403);
     if (
       !(
         await pool.query(
@@ -197,6 +237,9 @@ export async function buildApp() {
       ctx.actor,
       z.object({ code: z.string().regex(/^\d{6}$/) }).parse(req.body).code,
     );
+    await transaction(ctx.tenant, (db) =>
+      audit(db, ctx.tenant, ctx.actor, "mfa.enabled"),
+    );
     return { ok: true };
   });
   app.get("/v1/overview", async (req) => {
@@ -206,7 +249,7 @@ export async function buildApp() {
       const q = async (sql: string) => (await db.query(sql)).rows;
       return {
         subjects: await q(
-          "SELECT s.*,c.masked,c.id AS contact_id,c.verified,coalesce(cs.state,'UNKNOWN') AS state,coalesce(cs.evidence,'REVIEW_REQUIRED') AS evidence,coalesce(cs.revision,0) AS revision FROM subjects s LEFT JOIN contact_points c ON c.tenant_id=s.tenant_id AND c.subject_id=s.id AND c.channel='sms' AND c.active LEFT JOIN consent_current cs ON cs.tenant_id=s.tenant_id AND cs.subject_id=s.id AND cs.contact_id=c.id LEFT JOIN purposes p ON p.tenant_id=cs.tenant_id AND p.id=cs.purpose_id WHERE s.kind='member' ORDER BY s.external_id",
+          "SELECT s.*,c.masked,c.id AS contact_id,c.verified,ce.id AS email_contact_id,ce.masked AS email_masked,coalesce(cs.state,'UNKNOWN') AS state,coalesce(cs.evidence,'REVIEW_REQUIRED') AS evidence,coalesce(cs.revision,0) AS revision FROM subjects s LEFT JOIN contact_points c ON c.tenant_id=s.tenant_id AND c.subject_id=s.id AND c.channel='sms' AND c.active LEFT JOIN contact_points ce ON ce.tenant_id=s.tenant_id AND ce.subject_id=s.id AND ce.channel='email' AND ce.active LEFT JOIN LATERAL (SELECT x.state,x.evidence,x.revision FROM consent_current x JOIN purposes p ON p.tenant_id=x.tenant_id AND p.id=x.purpose_id WHERE x.tenant_id=s.tenant_id AND x.subject_id=s.id AND x.contact_id=c.id AND p.kind='advertising_reception' AND p.channel='sms' ORDER BY (p.key='ad_sms') DESC,p.key LIMIT 1) cs ON true WHERE s.kind='member' ORDER BY s.external_id",
         ),
         purposes: await q("SELECT * FROM purposes ORDER BY name"),
         notices: await q(
@@ -235,7 +278,7 @@ export async function buildApp() {
         ),
         stats: (
           await q(
-            "SELECT (SELECT count(*) FROM subjects WHERE kind='member')::int AS subjects,(SELECT count(*) FROM consent_current WHERE evidence<>'VERIFIED')::int AS unverified,(SELECT count(*) FROM message_jobs WHERE status IN ('blocked','cancelled'))::int AS blocked,(SELECT count(*) FROM notification_jobs WHERE status NOT IN ('delivered','cancelled') AND due_at<now())::int AS overdue,(SELECT count(*) FROM deletion_requests WHERE status<>'completed')::int AS deletion_pending,(SELECT count(*) FROM outbox WHERE status<>'delivered')::int AS propagation_pending",
+            "SELECT (SELECT count(*) FROM subjects WHERE kind='member')::int AS subjects,(SELECT count(*) FROM consent_current WHERE state='GRANTED' AND evidence<>'VERIFIED')::int AS unverified,(SELECT count(*) FROM message_jobs WHERE status IN ('blocked','cancelled'))::int AS blocked,(SELECT count(*) FROM notification_jobs WHERE status NOT IN ('delivered','cancelled') AND due_at<now())::int AS overdue,(SELECT count(*) FROM deletion_requests WHERE status<>'completed')::int AS deletion_pending,(SELECT count(*) FROM outbox WHERE status<>'delivered')::int AS propagation_pending",
           )
         )[0],
       };
@@ -367,7 +410,7 @@ export async function buildApp() {
         "notices",
         z.uuid().parse((req.params as any).id),
       );
-      if (n.status === "published") return n;
+      if (n.status === "published") return { ok: true, already: true };
       const p = await owned(db, "purposes", n.purpose_id);
       if (
         p.kind === "advertising_reception" &&
@@ -444,7 +487,8 @@ export async function buildApp() {
           z.uuid().parse((req.params as any).id),
         ),
         issues = templateIssues(t);
-      if (issues.length) fail(issues.join(","));
+      if (t.status === "approved") return { ok: true, already: true };
+      if (issues.length) fail("TEMPLATE_REVIEW_REQUIRED", 400, issues);
       await db.query(
         "UPDATE templates SET status='approved',approved_by=$2 WHERE id=$1",
         [t.id, c.actor],
@@ -465,6 +509,11 @@ export async function buildApp() {
       .parse(req.body);
     return transaction(c.tenant, async (db) => {
       await owned(db, "controllers", i.controller_id);
+      if (
+        (await db.query("SELECT 1 FROM sites WHERE domain=$1", [i.domain]))
+          .rowCount
+      )
+        fail("SITE_EXISTS", 409);
       const {
         rows: [s],
       } = await db.query(
@@ -478,6 +527,10 @@ export async function buildApp() {
           `${c.tenant}.${token()}`,
         ],
       );
+      await audit(db, c.tenant, c.actor, "site.created", {
+        id: s.id,
+        domain: s.domain,
+      });
       return s;
     });
   });
@@ -491,6 +544,7 @@ export async function buildApp() {
       fail("DNS_VERIFICATION_NOT_FOUND");
     return transaction(c.tenant, async (db) => {
       await db.query("UPDATE sites SET verified_at=now() WHERE id=$1", [s.id]);
+      await audit(db, c.tenant, c.actor, "site.verified", { id: s.id });
       return { verified: true };
     });
   });
@@ -591,7 +645,10 @@ export async function buildApp() {
                 .default([]),
             }),
           )
-          .max(50),
+          .max(50)
+          .refine((tags) => new Set(tags.map((t) => t.id)).size === tags.length, {
+            message: "DUPLICATE_TAG_ID",
+          }),
       })
       .strict()
       .parse(req.body);
@@ -621,8 +678,9 @@ export async function buildApp() {
         "web_configs",
         z.uuid().parse((req.params as any).id),
       );
+      if (v.status === "published") return { ok: true, already: true };
       await db.query(
-        "UPDATE web_configs SET status='published',published_at=now() WHERE id=$1 AND status<>'published'",
+        "UPDATE web_configs SET status='published',published_at=now() WHERE id=$1",
         [v.id],
       );
       await audit(db, c.tenant, c.actor, "web_config.published", { id: v.id });
@@ -665,7 +723,7 @@ export async function buildApp() {
     permit(c, "org:write");
     return (
       await pool.query(
-        "SELECT id,name,scopes,created_at,revoked_at FROM api_keys WHERE tenant_id=$1",
+        "SELECT id,name,scopes,created_at,revoked_at FROM api_keys WHERE tenant_id=$1 ORDER BY created_at DESC",
         [c.tenant],
       )
     ).rows;
@@ -673,11 +731,24 @@ export async function buildApp() {
   app.delete("/v1/keys/:id", async (req) => {
     const c = await ctxFor(req);
     permit(c, "org:write");
-    await pool.query(
-      "UPDATE api_keys SET revoked_at=now() WHERE tenant_id=$1 AND id=$2",
-      [c.tenant, z.uuid().parse((req.params as any).id)],
-    );
-    return { ok: true };
+    const id = z.uuid().parse((req.params as any).id);
+    return transaction(c.tenant, async (db) => {
+      const {
+        rows: [key],
+      } = await db.query(
+        "SELECT revoked_at FROM api_keys WHERE tenant_id=$1 AND id=$2 FOR UPDATE",
+        [c.tenant, id],
+      );
+      if (!key) fail("NOT_FOUND", 404);
+      // Keep the first revocation time; repeating the call must not rewrite history.
+      if (key.revoked_at) return { ok: true, already: true };
+      await db.query(
+        "UPDATE api_keys SET revoked_at=now() WHERE tenant_id=$1 AND id=$2",
+        [c.tenant, id],
+      );
+      await audit(db, c.tenant, c.actor, "api_key.revoked", { id });
+      return { ok: true };
+    });
   });
   app.post("/v1/memberships", async (req) => {
     const c = await ctxFor(req);
@@ -697,13 +768,24 @@ export async function buildApp() {
       })
       .strict()
       .parse(req.body);
-    const user = await newUser(i.email, i.password, i.name);
-    await pool.query("INSERT INTO memberships VALUES($1,$2,$3)", [
-      user,
-      c.tenant,
-      i.role,
-    ]);
-    return { id: user };
+    const digest = passwordHash(i.password);
+    // User and membership are created together so a failure cannot leave an orphan account.
+    return transaction(c.tenant, async (db) => {
+      const id = randomUUID();
+      await db.query(
+        "INSERT INTO users(id,email,password_hash,name) VALUES($1,$2,$3,$4)",
+        [id, normalizeEmail(i.email), digest, i.name],
+      );
+      await db.query(
+        "INSERT INTO memberships(user_id,tenant_id,role) VALUES($1,$2,$3)",
+        [id, c.tenant, i.role],
+      );
+      await audit(db, c.tenant, c.actor, "membership.created", {
+        user_id: id,
+        role: i.role,
+      });
+      return { id };
+    });
   });
   app.post("/v1/plan", async (req) => {
     const c = await ctxFor(req);
@@ -712,11 +794,14 @@ export async function buildApp() {
       .object({ ad_limit: z.number().int().min(0).max(1000000) })
       .strict()
       .parse(req.body);
-    await pool.query("UPDATE tenants SET ad_limit=$2 WHERE id=$1", [
-      c.tenant,
-      i.ad_limit,
-    ]);
-    return { ok: true };
+    return transaction(c.tenant, async (db) => {
+      await db.query("UPDATE tenants SET ad_limit=$2 WHERE id=$1", [
+        c.tenant,
+        i.ad_limit,
+      ]);
+      await audit(db, c.tenant, c.actor, "plan.ad_limit_changed", i);
+      return { ok: true, ad_limit: i.ad_limit };
+    });
   });
   app.post("/v1/connectors/:id/mock-mode", async (req) => {
     const c = await ctxFor(req);
@@ -727,11 +812,17 @@ export async function buildApp() {
       })
       .strict()
       .parse(req.body);
+    const id = z.uuid().parse((req.params as any).id);
     return transaction(c.tenant, async (db) => {
-      await db.query(
+      const r = await db.query(
         "UPDATE connectors SET mode=$2 WHERE id=$1 AND provider='mock'",
-        [z.uuid().parse((req.params as any).id), i.mode],
+        [id, i.mode],
       );
+      if (!r.rowCount) fail("NOT_FOUND", 404);
+      await audit(db, c.tenant, c.actor, "connector.mock_mode", {
+        id,
+        mode: i.mode,
+      });
       return { ok: true };
     });
   });
@@ -749,8 +840,9 @@ export async function buildApp() {
     return transaction(c.tenant, async (db) => {
       const {
           rows: [controller],
-        } = await db.query("SELECT id FROM controllers LIMIT 1"),
+        } = await db.query("SELECT id FROM controllers ORDER BY name LIMIT 1"),
         domain = new URL(process.env.APP_ORIGIN!).host;
+      if (!controller) fail("CONTROLLER_REQUIRED", 409);
       const {
         rows: [existing],
       } = await db.query("SELECT * FROM sites WHERE domain=$1", [domain]);
@@ -792,6 +884,7 @@ export async function buildApp() {
     });
   });
   app.get("/demo/tag.js", async (req, reply) => {
+    if (process.env.DEMO_MODE !== "true") fail("NOT_FOUND", 404);
     const kind = z
       .enum(["analytics", "advertising"])
       .parse((req.query as any).kind);
@@ -802,6 +895,7 @@ export async function buildApp() {
       );
   });
   app.get("/demo", async (req, reply) => {
+    if (process.env.DEMO_MODE !== "true") fail("NOT_FOUND", 404);
     const key = z
       .string()
       .regex(/^[a-zA-Z0-9_.-]+$/)

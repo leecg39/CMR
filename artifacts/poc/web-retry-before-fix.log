@@ -1,0 +1,400 @@
+
+> korean-cmp@0.1.0 test
+> tsx scripts/test.ts
+
+TAP version 13
+# Subtest: API: 로그인, 세션 테넌트 결정, Origin 검증 및 로그아웃
+ok 1 - API: 로그인, 세션 테넌트 결정, Origin 검증 및 로그아웃
+  ---
+  duration_ms: 138.515833
+  type: 'test'
+  ...
+# Subtest: T12 HTTP 키의 범위 및 다른 테넌트 증빙·회원 조회를 차단한다
+ok 2 - T12 HTTP 키의 범위 및 다른 테넌트 증빙·회원 조회를 차단한다
+  ---
+  duration_ms: 59.076792
+  type: 'test'
+  ...
+# Subtest: 본문 tenant_id로 테넌트 교체 불가, 알림톡 is_ad=false 우회 불가
+ok 3 - 본문 tenant_id로 테넌트 교체 불가, 알림톡 is_ad=false 우회 불가
+  ---
+  duration_ms: 22.503958
+  type: 'test'
+  ...
+# Subtest: 서명된 연락처 한정 링크는 추가 동의 없이 철회하며 재전송은 멱등이다
+ok 4 - 서명된 연락처 한정 링크는 추가 동의 없이 철회하며 재전송은 멱등이다
+  ---
+  duration_ms: 32.299
+  type: 'test'
+  ...
+# Subtest: 서명된 공급자 브리지 이벤트: 재전송 제거, 오래된 서명 거부
+ok 5 - 서명된 공급자 브리지 이벤트: 재전송 제거, 오래된 서명 거부
+  ---
+  duration_ms: 29.181584
+  type: 'test'
+  ...
+# Subtest: T14 이관 미리보기는 쓰지 않고, 승인 이관도 증빙 미검증으로 남긴다
+ok 6 - T14 이관 미리보기는 쓰지 않고, 승인 이관도 증빙 미검증으로 남긴다
+  ---
+  duration_ms: 26.561125
+  type: 'test'
+  ...
+# Subtest: T18 삭제 이후 복구된 자료에 외부 보관 삭제 이력을 재적용한다
+ok 7 - T18 삭제 이후 복구된 자료에 외부 보관 삭제 이력을 재적용한다
+  ---
+  duration_ms: 31.428833
+  type: 'test'
+  ...
+# Subtest: 웹 설정은 검증된 Origin에서만 제공되며 사이트 세션으로 SMS를 변경할 수 없다
+ok 8 - 웹 설정은 검증된 Origin에서만 제공되며 사이트 세션으로 SMS를 변경할 수 없다
+  ---
+  duration_ms: 33.97125
+  type: 'test'
+  ...
+# Subtest: 웹 선택 재전송은 단일 원본을 유지하고 철회 뒤 과거 허용 재전송은 태그를 허용하지 않는다
+not ok 9 - 웹 선택 재전송은 단일 원본을 유지하고 철회 뒤 과거 허용 재전송은 태그를 허용하지 않는다
+  ---
+  duration_ms: 24.988166
+  type: 'test'
+  location: '/Users/user01/Desktop/CMP/tests/api.test.ts:1:9859'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"code":"IDEMPOTENCY_CONFLICT","error":"IDEMPOTENCY_CONFLICT"}
+
+    409 !== 200
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 200
+  actual: 409
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/user01/Desktop/CMP/tests/api.test.ts:415:10)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: 약관 수락은 개인정보 및 광고 수신 동의와 다른 원장에 기록된다
+ok 10 - 약관 수락은 개인정보 및 광고 수신 동의와 다른 원장에 기록된다
+  ---
+  duration_ms: 13.789791
+  type: 'test'
+  ...
+# Subtest: SOLAPI 080 목록은 모든 페이지를 처리하고 인증 헤더를 보낸다
+ok 11 - SOLAPI 080 목록은 모든 페이지를 처리하고 인증 헤더를 보낸다
+  ---
+  duration_ms: 14.020291
+  type: 'test'
+  ...
+# Subtest: SOLAPI 080 조회 실패·잘못된 응답·페이지 순환은 성공으로 처리하지 않는다
+ok 12 - SOLAPI 080 조회 실패·잘못된 응답·페이지 순환은 성공으로 처리하지 않는다
+  ---
+  duration_ms: 1.782
+  type: 'test'
+  ...
+# Subtest: SOLAPI 실발송은 명시적 설정 및 테넌트 일치가 필요하고 타임아웃을 재발송하지 않는다
+ok 13 - SOLAPI 실발송은 명시적 설정 및 테넌트 일치가 필요하고 타임아웃을 재발송하지 않는다
+  ---
+  duration_ms: 0.375333
+  type: 'test'
+  ...
+# Subtest: 격리 스캐너 egress 프록시는 DNS 응답 전체를 확인하고 공인 IP로 고정한다
+ok 14 - 격리 스캐너 egress 프록시는 DNS 응답 전체를 확인하고 공인 IP로 고정한다
+  ---
+  duration_ms: 2.6865
+  type: 'test'
+  ...
+# Subtest: T03 웹 광고 허용은 SMS 광고 수신 동의로 확장되지 않는다
+ok 15 - T03 웹 광고 허용은 SMS 광고 수신 동의로 확장되지 않는다
+  ---
+  duration_ms: 86.982125
+  type: 'test'
+  ...
+# Subtest: T04 SMS 동의는 이메일 또는 다른 연락처로 확장되지 않는다
+ok 16 - T04 SMS 동의는 이메일 또는 다른 연락처로 확장되지 않는다
+  ---
+  duration_ms: 27.698542
+  type: 'test'
+  ...
+# Subtest: T05 예약 후 철회는 취소·거부·outbox를 원자적으로 갱신한다
+ok 17 - T05 예약 후 철회는 취소·거부·outbox를 원자적으로 갱신한다
+  ---
+  duration_ms: 76.975875
+  type: 'test'
+  ...
+# Subtest: T06 같은 grant 재전송 및 새 멱등 키의 과거 grant는 철회를 되돌리지 않는다
+ok 18 - T06 같은 grant 재전송 및 새 멱등 키의 과거 grant는 철회를 되돌리지 않는다
+  ---
+  duration_ms: 18.568708
+  type: 'test'
+  ...
+# Subtest: T07 20:59 예약도 21:00 실행 시 차단된다
+ok 19 - T07 20:59 예약도 21:00 실행 시 차단된다
+  ---
+  duration_ms: 37.153
+  type: 'test'
+  ...
+# Subtest: T08 상태 저장 트랜잭션 실패는 이벤트·현재 상태를 모두 롤백한다
+ok 20 - T08 상태 저장 트랜잭션 실패는 이벤트·현재 상태를 모두 롤백한다
+  ---
+  duration_ms: 19.102667
+  type: 'test'
+  ...
+# Subtest: T09 접수 후 타임아웃은 조회로 조정하고 중복 발송하지 않는다
+ok 21 - T09 접수 후 타임아웃은 조회로 조정하고 중복 발송하지 않는다
+  ---
+  duration_ms: 34.766291
+  type: 'test'
+  ...
+# Subtest: T09b 접수 전 타임아웃도 미접수를 증명하기 전 재발송하지 않는다
+ok 22 - T09b 접수 전 타임아웃도 미접수를 증명하기 전 재발송하지 않는다
+  ---
+  duration_ms: 34.049667
+  type: 'test'
+  ...
+# Subtest: T10 동의·거부·철회는 각각 처리결과 통지를 만든다
+ok 23 - T10 동의·거부·철회는 각각 처리결과 통지를 만든다
+  ---
+  duration_ms: 12.109917
+  type: 'test'
+  ...
+# Subtest: T11 한국 달력의 14일·2년 기한과 윤년을 처리한다
+ok 24 - T11 한국 달력의 14일·2년 기한과 윤년을 처리한다
+  ---
+  duration_ms: 0.435167
+  type: 'test'
+  ...
+# Subtest: T12 실제 비소유자 RLS: A 세션에서 B 자료 읽기·참조·쓰기 차단
+ok 25 - T12 실제 비소유자 RLS: A 세션에서 B 자료 읽기·참조·쓰기 차단
+  ---
+  duration_ms: 19.750208
+  type: 'test'
+  ...
+# Subtest: T13 외부 삭제가 확인되지 않으면 완료될 수 없다
+ok 26 - T13 외부 삭제가 확인되지 않으면 완료될 수 없다
+  ---
+  duration_ms: 13.628333
+  type: 'test'
+  ...
+# Subtest: T14 증빙 없는 과거 동의는 광고에서 제외된다
+ok 27 - T14 증빙 없는 과거 동의는 광고에서 제외된다
+  ---
+  duration_ms: 6.921625
+  type: 'test'
+  ...
+# Subtest: T15 광고 알림톡 및 거래 안내에 섞인 할인 광고는 거절된다
+ok 28 - T15 광고 알림톡 및 거래 안내에 섞인 할인 광고는 거절된다
+  ---
+  duration_ms: 0.099625
+  type: 'test'
+  ...
+# Subtest: T17 동시 중복 요청은 이벤트와 통지를 한 번만 생성한다
+ok 29 - T17 동시 중복 요청은 이벤트와 통지를 한 번만 생성한다
+  ---
+  duration_ms: 26.415792
+  type: 'test'
+  ...
+# Subtest: T19 번호 변경 시 기존 번호의 수신 동의는 이전되지 않는다
+ok 30 - T19 번호 변경 시 기존 번호의 수신 동의는 이전되지 않는다
+  ---
+  duration_ms: 47.136833
+  type: 'test'
+  ...
+# Subtest: T20 과금 한도 초과도 철회는 계속 반영한다
+ok 31 - T20 과금 한도 초과도 철회는 계속 반영한다
+  ---
+  duration_ms: 21.837333
+  type: 'test'
+  ...
+# Subtest: 문구·원장은 DB에서 수정 금지이고 증빙은 마스킹된 연락처만 포함한다
+ok 32 - 문구·원장은 DB에서 수정 금지이고 증빙은 마스킹된 연락처만 포함한다
+  ---
+  duration_ms: 14.859875
+  type: 'test'
+  ...
+# Subtest: 테넌트별 암호화·HMAC, TOTP 재전송 및 사설 네트워크 보호
+ok 33 - 테넌트별 암호화·HMAC, TOTP 재전송 및 사설 네트워크 보호
+  ---
+  duration_ms: 3.72075
+  type: 'test'
+  ...
+# Subtest: 웹 추적 거절은 예약 SMS와 다른 목적의 동의를 취소하지 않는다
+ok 34 - 웹 추적 거절은 예약 SMS와 다른 목적의 동의를 취소하지 않는다
+  ---
+  duration_ms: 20.373667
+  type: 'test'
+  ...
+# Subtest: 동일 테넌트 동시 작업에서도 철회 후 새 허용은 발생하지 않는다
+ok 35 - 동일 테넌트 동시 작업에서도 철회 후 새 허용은 발생하지 않는다
+  ---
+  duration_ms: 122.94525
+  type: 'test'
+  ...
+# Subtest: 정기 확인 전달은 동의일을 바꾸지 않고 다음 2년 회차를 한 번만 만든다
+ok 36 - 정기 확인 전달은 동의일을 바꾸지 않고 다음 2년 회차를 한 번만 만든다
+  ---
+  duration_ms: 30.538541
+  type: 'test'
+  ...
+# Subtest: 보유기간 종료 파기는 승인 정책·외부 확인·보존 중지를 모두 검사한다
+ok 37 - 보유기간 종료 파기는 승인 정책·외부 확인·보존 중지를 모두 검사한다
+  ---
+  duration_ms: 22.040875
+  type: 'test'
+  ...
+# Subtest: MMS는 승인된 이미지 ID를 요구하며 승인 후 본문·이미지를 바꿀 수 없다
+ok 38 - MMS는 승인된 이미지 ID를 요구하며 승인 후 본문·이미지를 바꿀 수 없다
+  ---
+  duration_ms: 12.266583
+  type: 'test'
+  ...
+# Subtest: 판단 엔진 로컬 부하 측정: 100건, 동시성 5, 실제 PostgreSQL
+ok 39 - 판단 엔진 로컬 부하 측정: 100건, 동시성 5, 실제 PostgreSQL
+  ---
+  duration_ms: 303.541041
+  type: 'test'
+  ...
+# {"environment":"local PostgreSQL, synthetic fixture; not a production SLA","samples":100,"concurrency":5,"p50_ms":6.46,"p95_ms":14.4,"max_ms":58.54}
+# Subtest: QA 오류 응답: 잘못된 JSON·과대 본문·미지원 형식은 503이 아닌 4xx
+ok 40 - QA 오류 응답: 잘못된 JSON·과대 본문·미지원 형식은 503이 아닌 4xx
+  ---
+  duration_ms: 57.90575
+  type: 'test'
+  ...
+# Subtest: QA 보안 헤더: 클릭재킹 차단, 운영 Origin에서는 개발 서버 Origin 거부
+ok 41 - QA 보안 헤더: 클릭재킹 차단, 운영 Origin에서는 개발 서버 Origin 거부
+  ---
+  duration_ms: 7.227083
+  type: 'test'
+  ...
+# Subtest: QA 데모 페이지는 DEMO_MODE가 아니면 제공하지 않는다
+ok 42 - QA 데모 페이지는 DEMO_MODE가 아니면 제공하지 않는다
+  ---
+  duration_ms: 1.2095
+  type: 'test'
+  ...
+# Subtest: QA 로그인: 대소문자 이메일로 만든 구성원도 로그인하고 모르는 계정도 같은 오류
+ok 43 - QA 로그인: 대소문자 이메일로 만든 구성원도 로그인하고 모르는 계정도 같은 오류
+  ---
+  duration_ms: 319.103292
+  type: 'test'
+  ...
+# Subtest: QA MFA: 설정된 인증 요소는 세션만으로 교체할 수 없다
+ok 44 - QA MFA: 설정된 인증 요소는 세션만으로 교체할 수 없다
+  ---
+  duration_ms: 33.757709
+  type: 'test'
+  ...
+# Subtest: QA 서버 키 폐기: 최초 폐기 시각 유지, 없는 키 404, 감사 기록
+ok 45 - QA 서버 키 폐기: 최초 폐기 시각 유지, 없는 키 404, 감사 기록
+  ---
+  duration_ms: 95.255833
+  type: 'test'
+  ...
+# Subtest: QA 한도·모의 모드 변경은 감사 기록을 남기고 /me가 실제 한도를 반환한다
+ok 46 - QA 한도·모의 모드 변경은 감사 기록을 남기고 /me가 실제 한도를 반환한다
+  ---
+  duration_ms: 88.594583
+  type: 'test'
+  ...
+# Subtest: QA 파기·제한 회원에 연락처를 다시 붙일 수 없고, 재등록한 연락처는 암호문을 갱신한다
+ok 47 - QA 파기·제한 회원에 연락처를 다시 붙일 수 없고, 재등록한 연락처는 암호문을 갱신한다
+  ---
+  duration_ms: 58.615291
+  type: 'test'
+  ...
+# Subtest: QA 삭제: 중복 요청·파기 회원 재요청·확인 완료 작업 재확인 거부
+ok 48 - QA 삭제: 중복 요청·파기 회원 재요청·확인 완료 작업 재확인 거부
+  ---
+  duration_ms: 53.010958
+  type: 'test'
+  ...
+# Subtest: QA 보유기간 파기 거부는 409와 사유 코드로 응답한다
+ok 49 - QA 보유기간 파기 거부는 409와 사유 코드로 응답한다
+  ---
+  duration_ms: 21.63975
+  type: 'test'
+  ...
+# Subtest: QA 이관: CSV 오류는 400, 기존 회원은 미리보기에 표시하고 확정을 거부한다
+ok 50 - QA 이관: CSV 오류는 400, 기존 회원은 미리보기에 표시하고 확정을 거부한다
+  ---
+  duration_ms: 19.86925
+  type: 'test'
+  ...
+# Subtest: QA 브리지 수신거부는 이미 철회된 동의에 처리결과 통지를 다시 만들지 않는다
+ok 51 - QA 브리지 수신거부는 이미 철회된 동의에 처리결과 통지를 다시 만들지 않는다
+  ---
+  duration_ms: 17.207333
+  type: 'test'
+  ...
+# Subtest: QA 웹 SDK: 잘못된 Origin/Referer는 403, 익명 조회는 행을 만들지 않고, 미설정 목적 허용은 거부
+ok 52 - QA 웹 SDK: 잘못된 Origin/Referer는 403, 익명 조회는 행을 만들지 않고, 미설정 목적 허용은 거부
+  ---
+  duration_ms: 39.087667
+  type: 'test'
+  ...
+# dispatch failed 14a0377c-4269-481f-8afe-7f7fedd5729a Invalid initialization vector
+# Subtest: QA 워커: 한 작업의 복호화 실패가 테넌트의 다른 발송을 멈추지 않는다
+ok 53 - QA 워커: 한 작업의 복호화 실패가 테넌트의 다른 발송을 멈추지 않는다
+  ---
+  duration_ms: 40.639
+  type: 'test'
+  ...
+# notification failed 0a6e3c2d-281b-4ef2-a017-5b57419902d7 IDEMPOTENCY_CONFLICT
+# Subtest: QA 워커: 재시도 통지의 멱등 충돌이 다른 통지와 접수 조정을 되돌리지 않는다
+ok 54 - QA 워커: 재시도 통지의 멱등 충돌이 다른 통지와 접수 조정을 되돌리지 않는다
+  ---
+  duration_ms: 33.064666
+  type: 'test'
+  ...
+# Subtest: QA 트랜잭션: DB 연결이 끊겨도 프로세스는 유지되고 원래 오류로 실패한다
+ok 55 - QA 트랜잭션: DB 연결이 끊겨도 프로세스는 유지되고 원래 오류로 실패한다
+  ---
+  duration_ms: 221.447875
+  type: 'test'
+  ...
+# Subtest: QA 설치 검사 고정 조회는 Node 22 autoSelectFamily(all:true) 호출에도 검증 주소만 사용한다
+ok 56 - QA 설치 검사 고정 조회는 Node 22 autoSelectFamily(all:true) 호출에도 검증 주소만 사용한다
+  ---
+  duration_ms: 9.012375
+  type: 'test'
+  ...
+# Subtest: QA 현황: 회원은 목적이 여러 개여도 한 줄이며 증빙 미확인은 동의 상태만 센다
+ok 57 - QA 현황: 회원은 목적이 여러 개여도 한 줄이며 증빙 미확인은 동의 상태만 센다
+  ---
+  duration_ms: 123.419375
+  type: 'test'
+  ...
+# Subtest: QA 게시·승인 재요청은 멱등이고, 검수 실패 사유는 구조화해 반환한다
+ok 58 - QA 게시·승인 재요청은 멱등이고, 검수 실패 사유는 구조화해 반환한다
+  ---
+  duration_ms: 91.098042
+  type: 'test'
+  ...
+# Subtest: QA 사이트 중복 등록은 409, 태그 id 중복은 400
+ok 59 - QA 사이트 중복 등록은 409, 태그 id 중복은 400
+  ---
+  duration_ms: 84.930708
+  type: 'test'
+  ...
+# Subtest: QA API 키로는 세션 테넌트를 전환할 수 없다
+ok 60 - QA API 키로는 세션 테넌트를 전환할 수 없다
+  ---
+  duration_ms: 14.700875
+  type: 'test'
+  ...
+# Subtest: 스캐너 게이트웨이: 인증·정해진 경로·크기 제한·실패 응답을 실제 HTTP로 검증
+ok 61 - 스캐너 게이트웨이: 인증·정해진 경로·크기 제한·실패 응답을 실제 HTTP로 검증
+  ---
+  duration_ms: 40.885292
+  type: 'test'
+  ...
+1..61
+# tests 61
+# suites 0
+# pass 60
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4391.177791

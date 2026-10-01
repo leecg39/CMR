@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "tenant_id": "6650fd73-99ce-49a5-aa2a-9e7081389c64",
+  "subject": {
+    "tenant_id": "6650fd73-99ce-49a5-aa2a-9e7081389c64",
+    "id": "8f59934c-fb8f-4496-9582-4ade84facbb6",
+    "external_id": "fixture-member",
+    "kind": "member",
+    "restricted": false,
+    "deleted_at": null,
+    "created_at": "2026-09-30T21:58:12.294Z"
+  },
+  "contacts": [
+    {
+      "id": "6fe59e9b-e3fb-410f-a155-ddfbde8b9f50",
+      "channel": "sms",
+      "masked": "010-****-9999",
+      "verified": true,
+      "active": true
+    }
+  ],
+  "events": [
+    {
+      "tenant_id": "6650fd73-99ce-49a5-aa2a-9e7081389c64",
+      "id": "c4de4192-dac5-4485-91be-66182b7ffd96",
+      "seq": "1",
+      "producer": "fixture",
+      "idempotency_key": "grant:marketing_use",
+      "payload_hash": "11e4f6f6359b16e19dafb81b1a427a9763ef0aafd7163c5c4c502ef4a6a2bfa3",
+      "subject_id": "8f59934c-fb8f-4496-9582-4ade84facbb6",
+      "contact_id": null,
+      "purpose_id": "1483f66c-5dd7-42d7-9574-ec58ff3111a5",
+      "notice_id": "0fcbe7f0-b767-4edd-9215-c703ef7e8af4",
+      "scope": "8f59934c-fb8f-4496-9582-4ade84facbb6::1483f66c-5dd7-42d7-9574-ec58ff3111a5",
+      "action": "granted",
+      "evidence": "VERIFIED",
+      "revision": 1,
+      "occurred_at": "2026-09-29T01:00:00.000Z",
+      "received_at": "2026-09-30T02:00:00.000Z",
+      "source": "verified_server",
+      "applied": true
+    },
+    {
+      "tenant_id": "6650fd73-99ce-49a5-aa2a-9e7081389c64",
+      "id": "7a2003f3-549c-469a-b461-09057594d00e",
+      "seq": "2",
+      "producer": "fixture",
+      "idempotency_key": "grant:ad_sms",
+      "payload_hash": "942a85e12e8323366cc4c5ae40dc93fc6c08b887773fffc263666f49d6f974ab",
+      "subject_id": "8f59934c-fb8f-4496-9582-4ade84facbb6",
+      "contact_id": "6fe59e9b-e3fb-410f-a155-ddfbde8b9f50",
+      "purpose_id": "fc3b6c78-d704-4b74-b834-e48a7910a3b2",
+      "notice_id": "0edbc0a8-6598-40b7-b34e-5af658cb5c4c",
+      "scope": "8f59934c-fb8f-4496-9582-4ade84facbb6:6fe59e9b-e3fb-410f-a155-ddfbde8b9f50:fc3b6c78-d704-4b74-b834-e48a7910a3b2",
+      "action": "granted",
+      "evidence": "VERIFIED",
+      "revision": 1,
+      "occurred_at": "2026-09-29T01:00:00.000Z",
+      "received_at": "2026-09-30T02:00:00.000Z",
+      "source": "verified_server",
+      "applied": true
+    },
+    {
+      "tenant_id": "6650fd73-99ce-49a5-aa2a-9e7081389c64",
+      "id": "24e2e8fa-0aac-4965-9304-be800cc8c04e",
+      "seq": "6",
+      "producer": "key:f8ac152f-6617-406e-a0f0-69df7e201fa3",
+      "idempotency_key": "poc-http-revoke",
+      "payload_hash": "b38dc59dba2264308e84ddeb37dfa308f99a9e5f9173f6d651e76e00d6ea5b1e",
+      "subject_id": "8f59934c-fb8f-4496-9582-4ade84facbb6",
+      "contact_id": "6fe59e9b-e3fb-410f-a155-ddfbde8b9f50",
+      "purpose_id": "fc3b6c78-d704-4b74-b834-e48a7910a3b2",
+      "notice_id": null,
+      "scope": "8f59934c-fb8f-4496-9582-4ade84facbb6:6fe59e9b-e3fb-410f-a155-ddfbde8b9f50:fc3b6c78-d704-4b74-b834-e48a7910a3b2",
+      "action": "revoked",
+      "evidence": "VERIFIED",
+      "revision": 2,
+      "occurred_at": null,
+      "received_at": "2026-09-30T21:58:12.955Z",
+      "source": "verified_server",
+      "applied": true
+    }
+  ],
+  "notices": [
+    {
+      "tenant_id": "6650fd73-99ce-49a5-aa2a-9e7081389c64",
+      "id": "0edbc0a8-6598-40b7-b34e-5af658cb5c4c",
+      "purpose_id": "fc3b6c78-d704-4b74-b834-e48a7910a3b2",
+      "version": 1,
+      "body": "광고성 정보에 동의하며 언제든 철회할 수 있습니다.",
+      "hash": "9368a7d21e018f64ae3327d2f25cd4d7693b2d85328e4bb680bcfcbd4c26b90e",
+      "status": "published",
+      "approved_by": null,
+      "published_at": "2026-09-30T21:58:12.294Z",
+      "created_at": "2026-09-30T21:58:12.294Z"
+    },
+    {
+      "tenant_id": "6650fd73-99ce-49a5-aa2a-9e7081389c64",
+      "id": "0fcbe7f0-b767-4edd-9215-c703ef7e8af4",
+      "purpose_id": "1483f66c-5dd7-42d7-9574-ec58ff3111a5",
+      "version": 1,
+      "body": "광고성 정보에 동의하며 언제든 철회할 수 있습니다.",
+      "hash": "9368a7d21e018f64ae3327d2f25cd4d7693b2d85328e4bb680bcfcbd4c26b90e",
+      "status": "published",
+      "approved_by": null,
+      "published_at": "2026-09-30T21:58:12.294Z",
+      "created_at": "2026-09-30T21:58:12.294Z"
+    }
+  ],
+  "rendered_web_configs": [],
+  "agreements": [],
+  "current": [
+    {
+      "tenant_id": "6650fd73-99ce-49a5-aa2a-9e7081389c64",
+      "scope": "8f59934c-fb8f-4496-9582-4ade84facbb6:6fe59e9b-e3fb-410f-a155-ddfbde8b9f50:fc3b6c78-d704-4b74-b834-e48a7910a3b2",
+      "subject_id": "8f59934c-fb8f-4496-9582-4ade84facbb6",
+      "contact_id": "6fe59e9b-e3fb-410f-a155-ddfbde8b9f50",
+      "purpose_id": "fc3b6c78-d704-4b74-b834-e48a7910a3b2",
+      "state": "REVOKED",
+      "evidence": "VERIFIED",
+      "revision": 2,
+      "last_event_id": "24e2e8fa-0aac-4965-9304-be800cc8c04e",
+      "changed_at": "2026-09-30T21:58:12.955Z",
+      "grant_at": null
+    },
+    {
+      "tenant_id": "6650fd73-99ce-49a5-aa2a-9e7081389c64",
+      "scope": "8f59934c-fb8f-4496-9582-4ade84facbb6::1483f66c-5dd7-42d7-9574-ec58ff3111a5",
+      "subject_id": "8f59934c-fb8f-4496-9582-4ade84facbb6",
+      "contact_id": null,
+      "purpose_id": "1483f66c-5dd7-42d7-9574-ec58ff3111a5",
+      "state": "GRANTED",
+      "evidence": "VERIFIED",
+      "revision": 1,
+      "last_event_id": "c4de4192-dac5-4485-91be-66182b7ffd96",
+      "changed_at": "2026-09-30T02:00:00.000Z",
+      "grant_at": "2026-09-29T01:00:00.000Z"
+    }
+  ],
+  "decisions": [],
+  "messages": [],
+  "sha256": "eddcb5f1c8c422fdbe238bfd0eede5ef8c24c74e84f79b39cc9fbad1726e948d"
+}

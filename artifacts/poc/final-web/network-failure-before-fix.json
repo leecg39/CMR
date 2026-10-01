@@ -1,0 +1,8 @@
+{
+  "choices": {
+    "analytics": false,
+    "advertising": false
+  },
+  "tagRequests": 0,
+  "error": "Failed to fetch"
+}

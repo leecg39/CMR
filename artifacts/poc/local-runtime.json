@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-10-01T02:21:38.951Z",
+  "url": "http://127.0.0.1:4310/",
+  "http_status": 200,
+  "health": {
+    "ok": true,
+    "storage": "postgresql",
+    "mode": "demo"
+  },
+  "real_messages_enabled": false
+}
