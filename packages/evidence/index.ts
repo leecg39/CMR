@@ -50,7 +50,7 @@ export function csv(rows: Record<string, unknown>[]) {
     "received_at",
   ];
   const esc = (v: unknown) =>
-    `"${String(v ?? "")
+    `"${(v instanceof Date ? v.toISOString() : String(v ?? ""))
       .replace(/^[=+@-]/, "'$&")
       .replace(/"/g, '""')}"`;
   return (
