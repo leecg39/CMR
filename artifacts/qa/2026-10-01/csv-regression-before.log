@@ -1,0 +1,32 @@
+✖ QA 증빙 CSV: JSON과 같은 UTC 시각과 밀리초를 보존한다 (8.009792ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 320.725625
+
+✖ failing tests:
+
+test at tests/evidence-csv.regression-1.test.ts:1:149
+✖ QA 증빙 CSV: JSON과 같은 UTC 시각과 밀리초를 보존한다 (8.009792ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'Thu Oct 01 2026 12:36:00 GMT+0900 (Korean Standard Time)'
+  - '2026-10-01T03:36:00.123Z'
+
+      at TestContext.<anonymous> (/Users/user01/Desktop/CMP/.local/qa-worktree/tests/evidence-csv.regression-1.test.ts:32:12)
+      at Test.runInAsyncScope (node:async_hooks:213:14)
+      at Test.run (node:internal/test_runner/test:1095:25)
+      at Test.start (node:internal/test_runner/test:992:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Thu Oct 01 2026 12:36:00 GMT+0900 (Korean Standard Time)',
+    expected: '2026-10-01T03:36:00.123Z',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

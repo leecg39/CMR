@@ -1,0 +1,612 @@
+{
+  "started_at": "2026-10-01T03:45:28.023Z",
+  "status": "passed",
+  "source_sha256": "6b3781221f1ebe257596272f555782fc054a6f19349ba253d35cfb5d63acad18",
+  "sdk_sha256": "f8d73e35e18ebd44e4cc06bdb06a11e8889c3d08723fb936f4526bc4374a1d81",
+  "scenarios": [
+    {
+      "name": "미선택",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "activeTags": 0,
+      "panelHidden": false,
+      "error": "",
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "전체 거절",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "activeTags": 0,
+      "panelHidden": true,
+      "error": "",
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "거절 후 재방문",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "activeTags": 0,
+      "panelHidden": true,
+      "error": "",
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "분석만 허용",
+      "choices": {
+        "analytics": true,
+        "advertising": false
+      },
+      "requests": [
+        "analytics"
+      ],
+      "executed": [
+        "analytics"
+      ],
+      "activeTags": 1,
+      "panelHidden": true,
+      "error": "",
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "granted",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "분석만 허용 후 재방문",
+      "choices": {
+        "analytics": true,
+        "advertising": false
+      },
+      "requests": [
+        "analytics"
+      ],
+      "executed": [
+        "analytics"
+      ],
+      "activeTags": 1,
+      "panelHidden": true,
+      "error": "",
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "granted",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "전체 허용",
+      "choices": {
+        "analytics": true,
+        "advertising": true
+      },
+      "requests": [
+        "advertising",
+        "analytics"
+      ],
+      "executed": [
+        "advertising",
+        "analytics"
+      ],
+      "activeTags": 2,
+      "panelHidden": true,
+      "error": "",
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "granted",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "granted",
+            "ad_storage": "granted",
+            "ad_user_data": "granted",
+            "ad_personalization": "granted"
+          }
+        }
+      ]
+    },
+    {
+      "name": "전체 허용 후 재방문",
+      "choices": {
+        "analytics": true,
+        "advertising": true
+      },
+      "requests": [
+        "advertising",
+        "analytics"
+      ],
+      "executed": [
+        "advertising",
+        "analytics"
+      ],
+      "activeTags": 2,
+      "panelHidden": true,
+      "error": "",
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "granted",
+            "ad_storage": "granted",
+            "ad_user_data": "granted",
+            "ad_personalization": "granted"
+          }
+        }
+      ]
+    },
+    {
+      "name": "허용 후 철회",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [
+        "advertising",
+        "analytics"
+      ],
+      "executed": [
+        "advertising",
+        "analytics"
+      ],
+      "activeTags": 0,
+      "panelHidden": true,
+      "error": "",
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "granted",
+            "ad_storage": "granted",
+            "ad_user_data": "granted",
+            "ad_personalization": "granted"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "철회 후 재방문",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "activeTags": 0,
+      "panelHidden": true,
+      "error": "",
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "연속 허용·철회: 허용 응답을 보류한 동안",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "activeTags": 0,
+      "panelHidden": false,
+      "error": "",
+      "consentRequests": [
+        {
+          "analytics": true,
+          "advertising": true
+        }
+      ],
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "연속 허용·철회: 마지막 철회 저장 후",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "activeTags": 0,
+      "panelHidden": true,
+      "error": "",
+      "consentRequests": [
+        {
+          "analytics": true,
+          "advertising": true
+        },
+        {
+          "analytics": false,
+          "advertising": false
+        }
+      ],
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "연속 허용·철회 후 재방문",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "activeTags": 0,
+      "panelHidden": true,
+      "error": "",
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "저장 API 연결 실패",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "activeTags": 0,
+      "panelHidden": false,
+      "error": "선택을 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "저장 실패 후 재시도·설정 다시 열기",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "activeTags": 0,
+      "panelHidden": false,
+      "error": "",
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "설정 API 연결 실패",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "activeTags": 0,
+      "panelHidden": null,
+      "error": null,
+      "configErrors": [
+        "CONFIG_UNAVAILABLE"
+      ],
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "설정 API 복구 후 재방문",
+      "choices": {
+        "analytics": false,
+        "advertising": false
+      },
+      "requests": [],
+      "executed": [],
+      "activeTags": 0,
+      "panelHidden": true,
+      "error": "",
+      "configErrors": [],
+      "consentSignals": [
+        {
+          "type": "default",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        },
+        {
+          "type": "update",
+          "value": {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied"
+          }
+        }
+      ]
+    }
+  ],
+  "finished_at": "2026-10-01T03:45:41.058Z"
+}

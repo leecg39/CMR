@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-01",
+  "url": "http://127.0.0.1:4310/",
+  "healthScore": 99.7,
+  "baselineHealthScore": 98.1,
+  "issues": [
+    {
+      "id": "ISSUE-002",
+      "severity": "low",
+      "category": "content",
+      "title": "검색 결과 없음이 회원 미등록처럼 안내됨",
+      "status": "deferred",
+      "reproduced": true
+    },
+    {
+      "id": "ISSUE-003",
+      "severity": "low",
+      "category": "content",
+      "title": "처리 결과 통지의 템플릿에 내부 코드가 표시됨",
+      "status": "deferred",
+      "reproduced": true
+    }
+  ],
+  "categoryScores": {
+    "console": 100,
+    "links": 100,
+    "visual": 100,
+    "functional": 100,
+    "ux": 100,
+    "performance": 100,
+    "content": 94,
+    "accessibility": 100
+  },
+  "scope": "이번 로컬 합성 흐름의 관찰 결과. 전체 성능·접근성 인증 아님."
+}

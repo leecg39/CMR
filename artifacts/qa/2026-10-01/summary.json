@@ -1,0 +1,46 @@
+{
+  "checked_at": "2026-10-01T03:50:17.071645+00:00",
+  "status": "passed_with_low_priority_followups",
+  "tested_commit": "7bb09b7eebd38eac9b8ae6abdcd4ff6eb23e2a99",
+  "fix_commit": "99314d7",
+  "regression_test_commit": "7bb09b7",
+  "checks": {
+    "automated_tests": 63,
+    "failed": 0,
+    "skipped": 0,
+    "build": "passed",
+    "admin_browser_checks": 17,
+    "mobile_menus": 7,
+    "web_browser_scenarios": 16,
+    "http_and_server_ledger_checks": 11,
+    "web_server_events": 14
+  },
+  "issues": {
+    "found": 3,
+    "verified_fixes": 1,
+    "remaining_medium_or_higher": 0,
+    "deferred_low": 2
+  },
+  "healthScore": {
+    "before": 98.1,
+    "after": 99.7
+  },
+  "sdk_sha256": "f8d73e35e18ebd44e4cc06bdb06a11e8889c3d08723fb936f4526bc4374a1d81",
+  "real_messages_sent": false,
+  "production_release_allowed": false,
+  "user_deferred": [
+    "문자·080 실연동",
+    "파일럿 검증"
+  ],
+  "cleanup": {
+    "browser_space_finished": true,
+    "temporary_poc_databases_removed": true,
+    "qa_worktree_removed": true
+  },
+  "retained_synthetic_member": {
+    "external_id": "qa-ui-20261001-702425",
+    "id": "bdadda6b-55e4-425d-82f1-5cb89be83638",
+    "sms_state": "REVOKED",
+    "reservation": "cancelled"
+  }
+}

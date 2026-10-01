@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "events": [
+    {
+      "id": "e260ffd5-6318-4375-a70b-87fb7d78cd87",
+      "occurred_at_equal": true,
+      "received_at_equal": true,
+      "received_at": "2026-10-01T03:36:10.703Z"
+    },
+    {
+      "id": "871e2d08-b2be-4613-bcd5-70a42ceae508",
+      "occurred_at_equal": true,
+      "received_at_equal": true,
+      "received_at": "2026-10-01T03:36:13.677Z"
+    },
+    {
+      "id": "f5a61daf-498f-4cf3-8a67-18115c2a0e0b",
+      "occurred_at_equal": true,
+      "received_at_equal": true,
+      "received_at": "2026-10-01T03:37:42.201Z"
+    }
+  ]
+}

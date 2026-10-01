@@ -1,0 +1,1239 @@
+{
+  "started_at": "2026-10-01T03:34:18.987Z",
+  "url": "http://127.0.0.1:4310/",
+  "space": 12,
+  "checks": [
+    {
+      "name": "빈 로그인 제출",
+      "status": "passed",
+      "details": "이메일·비밀번호 필수값 검증"
+    },
+    {
+      "name": "잘못된 로그인",
+      "status": "passed",
+      "details": "한국어 오류, 관리자 접근 차단"
+    },
+    {
+      "name": "회원 등록 모달의 키보드 이동",
+      "status": "passed",
+      "details": {
+        "first": {
+          "name": "id",
+          "inDialog": true
+        },
+        "last": {
+          "text": "저장",
+          "inDialog": true
+        }
+      }
+    },
+    {
+      "name": "회원 검색과 철회 상태 필터",
+      "status": "passed",
+      "details": "없는 검색어 0행, 철회 필터 4행"
+    },
+    {
+      "name": "빈 회원 ID 거부와 합성 회원 등록",
+      "status": "passed",
+      "details": {
+        "id": "qa-ui-20261001-702425"
+      }
+    },
+    {
+      "name": "잘못된 연락처 거부와 합성 번호 등록",
+      "status": "passed",
+      "details": "123 거부, 모의 번호 010-****-7024 등록"
+    },
+    {
+      "name": "합성 회원의 마케팅 이용·문자 수신 동의 기록",
+      "status": "passed",
+      "details": "qa-ui-20261001-702425 bdadda6b010-****-7024동의검증됨r1상세 보기"
+    },
+    {
+      "name": "동의 후 발송 전 검사",
+      "status": "passed",
+      "details": {
+        "id": "db6666b6-c667-4c41-95d7-fd30bcea5783",
+        "allowed": true,
+        "reasons": [],
+        "ruleset": "kr_sms_explicit_daytime_v1",
+        "revision": 1,
+        "evaluated_at": "2026-10-01T03:36:46.446Z"
+      }
+    },
+    {
+      "name": "합성 회원의 미래 예약",
+      "status": "passed",
+      "details": [
+        {
+          "url": "/v1/messages",
+          "status": 200,
+          "done": true,
+          "body": {
+            "tenant_id": "ad94c56e-7464-479c-86b5-ad4a8f0520ee",
+            "id": "69a484d5-cac5-48b9-943e-87989b69d64d",
+            "subject_id": "bdadda6b-55e4-425d-82f1-5cb89be83638",
+            "contact_id": "fb885650-0503-449e-b44c-1920243358d1",
+            "template_id": "2735d150-71c0-433d-b4f8-a13fb73622a8",
+            "idempotency_key": "632cf029-5eb4-489c-8f3a-3c6aa9020b51",
+            "payload_hash": "0e8395ab34dafabb3d63911679690f0f2c27b6a348836e70b790ddaa9241ad80",
+            "status": "queued",
+            "scheduled_at": "2026-10-02T01:30:00.000Z",
+            "reasons": [],
+            "decision_id": "5016ce19-51ec-44ce-863a-d5d1d714b508",
+            "provider_id": null,
+            "attempts": 0,
+            "authorized_at": null,
+            "accepted_at": null,
+            "created_at": "2026-10-01T03:37:12.895Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "철회 후 미래 예약 취소",
+      "status": "passed",
+      "details": [
+        "qa-ui-20261001-702425신상품 소식2026. 10. 02. 오전 10:30취소광고 수신 동의 철회",
+        "qa-ui-20261001-702425processing_result2026. 10. 01. 오후 12:36전달 완료—"
+      ]
+    },
+    {
+      "name": "철회 후 새 발송 승인 차단",
+      "status": "passed",
+      "details": {
+        "id": "a61c8ef3-90d1-495b-8b97-b1421d26e019",
+        "allowed": false,
+        "reasons": [
+          "CONSENT_WITHDRAWN",
+          "SUPPRESSED"
+        ],
+        "ruleset": "kr_sms_explicit_daytime_v1",
+        "revision": 2,
+        "evaluated_at": "2026-10-01T03:38:18.057Z"
+      }
+    },
+    {
+      "name": "합성 회원 증빙 JSON 실제 다운로드",
+      "status": "passed",
+      "details": {
+        "file": "evidence.json",
+        "keys": [
+          "schema_version",
+          "tenant_id",
+          "subject",
+          "contacts",
+          "events",
+          "notices",
+          "rendered_web_configs",
+          "agreements",
+          "current",
+          "decisions",
+          "messages",
+          "sha256"
+        ]
+      }
+    },
+    {
+      "name": "합성 회원 증빙 CSV 실제 다운로드",
+      "status": "passed",
+      "details": {
+        "file": "evidence.csv"
+      }
+    },
+    {
+      "name": "워크스페이스 전환의 UI 고객사 격리",
+      "status": "passed",
+      "details": {
+        "source": "qa-ui-20261001-702425 bdadda6b010-****-7024철회검증됨r2상세 보기",
+        "otherTenantMatchingRows": 0
+      }
+    },
+    {
+      "name": "CSV 타임스탬프 수정 후 실제 재다운로드",
+      "status": "passed",
+      "details": [
+        {
+          "id": "e260ffd5-6318-4375-a70b-87fb7d78cd87",
+          "occurred_at_equal": true,
+          "received_at_equal": true,
+          "received_at": "2026-10-01T03:36:10.703Z"
+        },
+        {
+          "id": "871e2d08-b2be-4613-bcd5-70a42ceae508",
+          "occurred_at_equal": true,
+          "received_at_equal": true,
+          "received_at": "2026-10-01T03:36:13.677Z"
+        },
+        {
+          "id": "f5a61daf-498f-4cf3-8a67-18115c2a0e0b",
+          "occurred_at_equal": true,
+          "received_at_equal": true,
+          "received_at": "2026-10-01T03:37:42.201Z"
+        }
+      ]
+    },
+    {
+      "name": "모바일 390px의 7개 메뉴와 모달",
+      "status": "passed",
+      "details": {
+        "menus": 7,
+        "escapeClosesModal": true
+      }
+    },
+    {
+      "name": "로그아웃과 보호 API 접근 차단",
+      "status": "passed",
+      "details": {
+        "http_status": 401
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "운영 현황",
+      "headings": [
+        "동의 운영 현황",
+        "동의 상태",
+        "확인이 필요한 업무",
+        "최근 운영 기록"
+      ],
+      "buttons": [
+        {
+          "text": "운영 현황",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "웹 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "회원 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "발송 통제",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "준수 업무",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "증빙 · 정책",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "조직 · 연동",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "운운영 담당자소유자",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "",
+          "aria": "새로고침",
+          "disabled": false
+        },
+        {
+          "text": "증빙 내보내기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "설치 시작하기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "회원 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "동의 증빙 검토4증빙이 없는 기존 동의는 발송에서 제외됩니다.",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "거부 외부 전파0자체 발송 차단은 즉시 적용됩니다.",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "삭제 결과 확인0외부 시스템의 확인까지 추적합니다.",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "전체 기록",
+          "aria": null,
+          "disabled": false
+        }
+      ],
+      "inputs": [
+        {
+          "tag": "SELECT",
+          "name": "",
+          "label": "",
+          "aria": "워크스페이스 선택",
+          "type": "select-one"
+        }
+      ],
+      "overflow": false,
+      "errors": [],
+      "alerts": []
+    },
+    {
+      "name": "웹 동의",
+      "headings": [
+        "웹 동의",
+        "127.0.0.1:4310"
+      ],
+      "buttons": [
+        {
+          "text": "운영 현황",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "웹 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "회원 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "발송 통제",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "준수 업무",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "증빙 · 정책",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "조직 · 연동",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "운운영 담당자소유자",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "",
+          "aria": "새로고침",
+          "disabled": false
+        },
+        {
+          "text": "사이트 추가",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "SDK 체험 열기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "설치 검사",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "설정 버전 추가",
+          "aria": null,
+          "disabled": false
+        }
+      ],
+      "inputs": [
+        {
+          "tag": "SELECT",
+          "name": "",
+          "label": "",
+          "aria": "워크스페이스 선택",
+          "type": "select-one"
+        }
+      ],
+      "overflow": false,
+      "errors": [],
+      "alerts": []
+    },
+    {
+      "name": "회원 동의",
+      "headings": [
+        "회원 동의"
+      ],
+      "buttons": [
+        {
+          "text": "운영 현황",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "웹 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "회원 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "발송 통제",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "준수 업무",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "증빙 · 정책",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "조직 · 연동",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "운운영 담당자소유자",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "",
+          "aria": "새로고침",
+          "disabled": false
+        },
+        {
+          "text": "CSV 이관",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "회원 등록",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "상세 보기",
+          "aria": null,
+          "disabled": false
+        }
+      ],
+      "inputs": [
+        {
+          "tag": "SELECT",
+          "name": "",
+          "label": "",
+          "aria": "워크스페이스 선택",
+          "type": "select-one"
+        },
+        {
+          "tag": "INPUT",
+          "name": "",
+          "label": "",
+          "aria": "회원 검색",
+          "type": "text"
+        },
+        {
+          "tag": "SELECT",
+          "name": "",
+          "label": "",
+          "aria": "동의 상태 필터",
+          "type": "select-one"
+        }
+      ],
+      "overflow": false,
+      "errors": [],
+      "alerts": []
+    },
+    {
+      "name": "발송 통제",
+      "headings": [
+        "발송 통제",
+        "메시지 템플릿",
+        "발송 가능 여부 확인",
+        "검수된 메시지 예약",
+        "발송 작업"
+      ],
+      "buttons": [
+        {
+          "text": "운영 현황",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "웹 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "회원 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "발송 통제",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "준수 업무",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "증빙 · 정책",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "조직 · 연동",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "운운영 담당자소유자",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "",
+          "aria": "새로고침",
+          "disabled": false
+        },
+        {
+          "text": "템플릿 작성",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "내용 보기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "발송 전 검사",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "발송 요청",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "대기 작업 처리",
+          "aria": null,
+          "disabled": false
+        }
+      ],
+      "inputs": [
+        {
+          "tag": "SELECT",
+          "name": "",
+          "label": "",
+          "aria": "워크스페이스 선택",
+          "type": "select-one"
+        },
+        {
+          "tag": "SELECT",
+          "name": "subject",
+          "label": "회원member-0081 · 010-****-0081 · 동의member-0082 · 010-****-0082 · 철회member-0083 · 010-****-0083 · 거부member-0084 · 010-****-0084 · 동의member-0085 · 010-****-0085 · 미선택member-0086 · 010-****-0086 · 동의member-0087 · 010-****-0087 · 철회member-0088 · 010-****-0088 · 거부member-0089 · 010-****-0089 · 동의member-0090 · 010-****-0090 · 미선택member-0091 · 010-****-0091 · 동의member-0092 · 010-****-0092 · 철회member-0093 · 010-****-0093 · 거부member-0094 · 010-****-0094 · 동의member-0095 · 010-****-0095 · 미선택member-0096 · 010-****-0096 · 동의member-0097 · 010-****-0097 · 철회member-0098 · 010-****-0098 · 거부member-0099 · 010-****-0099 · 동의member-0100 · 010-****-0100 · 미선택",
+          "aria": null,
+          "type": "select-one"
+        },
+        {
+          "tag": "SELECT",
+          "name": "template",
+          "label": "메시지 템플릿신상품 소식 · 승인됨",
+          "aria": null,
+          "type": "select-one"
+        },
+        {
+          "tag": "SELECT",
+          "name": "subject",
+          "label": "회원member-0081 · 010-****-0081 · 동의member-0082 · 010-****-0082 · 철회member-0083 · 010-****-0083 · 거부member-0084 · 010-****-0084 · 동의member-0085 · 010-****-0085 · 미선택member-0086 · 010-****-0086 · 동의member-0087 · 010-****-0087 · 철회member-0088 · 010-****-0088 · 거부member-0089 · 010-****-0089 · 동의member-0090 · 010-****-0090 · 미선택member-0091 · 010-****-0091 · 동의member-0092 · 010-****-0092 · 철회member-0093 · 010-****-0093 · 거부member-0094 · 010-****-0094 · 동의member-0095 · 010-****-0095 · 미선택member-0096 · 010-****-0096 · 동의member-0097 · 010-****-0097 · 철회member-0098 · 010-****-0098 · 거부member-0099 · 010-****-0099 · 동의member-0100 · 010-****-0100 · 미선택",
+          "aria": null,
+          "type": "select-one"
+        },
+        {
+          "tag": "SELECT",
+          "name": "template",
+          "label": "승인 템플릿신상품 소식",
+          "aria": null,
+          "type": "select-one"
+        },
+        {
+          "tag": "INPUT",
+          "name": "scheduled",
+          "label": "예약 시각 (한국 시간, 비워두면 즉시 대기)",
+          "aria": null,
+          "type": "datetime-local"
+        }
+      ],
+      "overflow": false,
+      "errors": [],
+      "alerts": []
+    },
+    {
+      "name": "준수 업무",
+      "headings": [
+        "준수 업무",
+        "통지 업무",
+        "삭제 요청"
+      ],
+      "buttons": [
+        {
+          "text": "운영 현황",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "웹 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "회원 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "발송 통제",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "준수 업무",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "증빙 · 정책",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "조직 · 연동",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "운운영 담당자소유자",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "",
+          "aria": "새로고침",
+          "disabled": false
+        },
+        {
+          "text": "통지 처리",
+          "aria": null,
+          "disabled": false
+        }
+      ],
+      "inputs": [
+        {
+          "tag": "SELECT",
+          "name": "",
+          "label": "",
+          "aria": "워크스페이스 선택",
+          "type": "select-one"
+        }
+      ],
+      "overflow": false,
+      "errors": [],
+      "alerts": []
+    },
+    {
+      "name": "증빙 · 정책",
+      "headings": [
+        "증빙 · 정책",
+        "회원별 증빙 내보내기",
+        "동의 문구 버전",
+        "감사 기록"
+      ],
+      "buttons": [
+        {
+          "text": "운영 현황",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "웹 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "회원 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "발송 통제",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "준수 업무",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "증빙 · 정책",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "조직 · 연동",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "운운영 담당자소유자",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "",
+          "aria": "새로고침",
+          "disabled": false
+        },
+        {
+          "text": "문구 작성",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "내보내기",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "문구 확인",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "문구 확인",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "문구 확인",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "문구 확인",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "문구 확인",
+          "aria": null,
+          "disabled": false
+        }
+      ],
+      "inputs": [
+        {
+          "tag": "SELECT",
+          "name": "",
+          "label": "",
+          "aria": "워크스페이스 선택",
+          "type": "select-one"
+        },
+        {
+          "tag": "SELECT",
+          "name": "subject",
+          "label": "",
+          "aria": "증빙 대상 회원",
+          "type": "select-one"
+        },
+        {
+          "tag": "SELECT",
+          "name": "format",
+          "label": "",
+          "aria": "파일 형식",
+          "type": "select-one"
+        }
+      ],
+      "overflow": false,
+      "errors": [],
+      "alerts": []
+    },
+    {
+      "name": "조직 · 연동",
+      "headings": [
+        "조직 · 연동",
+        "로그인 보안",
+        "서버 API 키",
+        "발송사 연동",
+        "사용 한도"
+      ],
+      "buttons": [
+        {
+          "text": "운영 현황",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "웹 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "회원 동의",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "발송 통제",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "준수 업무",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "증빙 · 정책",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "조직 · 연동",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "운운영 담당자소유자",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "",
+          "aria": "새로고침",
+          "disabled": false
+        },
+        {
+          "text": "2단계 인증 설정",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "서버 키 발급",
+          "aria": null,
+          "disabled": false
+        },
+        {
+          "text": "한도 저장",
+          "aria": null,
+          "disabled": false
+        }
+      ],
+      "inputs": [
+        {
+          "tag": "SELECT",
+          "name": "",
+          "label": "",
+          "aria": "워크스페이스 선택",
+          "type": "select-one"
+        },
+        {
+          "tag": "SELECT",
+          "name": "",
+          "label": "",
+          "aria": "모의 발송사 장애 주입",
+          "type": "select-one"
+        },
+        {
+          "tag": "INPUT",
+          "name": "limit",
+          "label": "월 광고 발송 한도",
+          "aria": null,
+          "type": "number"
+        }
+      ],
+      "overflow": false,
+      "errors": [],
+      "alerts": []
+    }
+  ],
+  "member": "qa-ui-20261001-702425",
+  "member_uuid": "bdadda6b-55e4-425d-82f1-5cb89be83638",
+  "reservation": [
+    {
+      "url": "/v1/messages",
+      "status": 200,
+      "done": true,
+      "body": {
+        "tenant_id": "ad94c56e-7464-479c-86b5-ad4a8f0520ee",
+        "id": "69a484d5-cac5-48b9-943e-87989b69d64d",
+        "subject_id": "bdadda6b-55e4-425d-82f1-5cb89be83638",
+        "contact_id": "fb885650-0503-449e-b44c-1920243358d1",
+        "template_id": "2735d150-71c0-433d-b4f8-a13fb73622a8",
+        "idempotency_key": "632cf029-5eb4-489c-8f3a-3c6aa9020b51",
+        "payload_hash": "0e8395ab34dafabb3d63911679690f0f2c27b6a348836e70b790ddaa9241ad80",
+        "status": "queued",
+        "scheduled_at": "2026-10-02T01:30:00.000Z",
+        "reasons": [],
+        "decision_id": "5016ce19-51ec-44ce-863a-d5d1d714b508",
+        "provider_id": null,
+        "attempts": 0,
+        "authorized_at": null,
+        "accepted_at": null,
+        "created_at": "2026-10-01T03:37:12.895Z"
+      }
+    }
+  ],
+  "mobile": [
+    {
+      "name": "운영 현황",
+      "width": 390,
+      "scrollWidth": 390,
+      "heading": "동의 운영 현황",
+      "errors": []
+    },
+    {
+      "name": "웹 동의",
+      "width": 390,
+      "scrollWidth": 390,
+      "heading": "웹 동의",
+      "errors": []
+    },
+    {
+      "name": "회원 동의",
+      "width": 390,
+      "scrollWidth": 390,
+      "heading": "회원 동의",
+      "errors": []
+    },
+    {
+      "name": "발송 통제",
+      "width": 390,
+      "scrollWidth": 390,
+      "heading": "발송 통제",
+      "errors": []
+    },
+    {
+      "name": "준수 업무",
+      "width": 390,
+      "scrollWidth": 390,
+      "heading": "준수 업무",
+      "errors": []
+    },
+    {
+      "name": "증빙 · 정책",
+      "width": 390,
+      "scrollWidth": 390,
+      "heading": "증빙 · 정책",
+      "errors": []
+    },
+    {
+      "name": "조직 · 연동",
+      "width": 390,
+      "scrollWidth": 390,
+      "heading": "조직 · 연동",
+      "errors": []
+    }
+  ],
+  "issues": [
+    {
+      "id": "ISSUE-001",
+      "severity": "medium",
+      "category": "functional",
+      "title": "증빙 CSV의 타임스탬프 밀리초 누락",
+      "status": "verified",
+      "fix_commit": "99314d7",
+      "test_commit": "7bb09b7"
+    },
+    {
+      "id": "ISSUE-002",
+      "severity": "low",
+      "category": "content",
+      "title": "검색 결과 없음이 회원 미등록처럼 안내됨",
+      "status": "deferred",
+      "reproduced": true
+    },
+    {
+      "id": "ISSUE-003",
+      "severity": "low",
+      "category": "content",
+      "title": "처리 결과 통지의 템플릿에 내부 코드가 표시됨",
+      "status": "deferred",
+      "reproduced": true
+    }
+  ],
+  "console_errors": [],
+  "network": [
+    {
+      "url": "/v1/decisions",
+      "status": 200
+    },
+    {
+      "url": "/v1/me",
+      "status": 200
+    },
+    {
+      "url": "/v1/overview",
+      "status": 200
+    },
+    {
+      "url": "/v1/messages",
+      "status": 200
+    },
+    {
+      "url": "/v1/me",
+      "status": 200
+    },
+    {
+      "url": "/v1/overview",
+      "status": 200
+    },
+    {
+      "url": "/v1/subjects/bdadda6b-55e4-425d-82f1-5cb89be83638/preferences",
+      "status": 200
+    },
+    {
+      "url": "/v1/me",
+      "status": 200
+    },
+    {
+      "url": "/v1/overview",
+      "status": 200
+    },
+    {
+      "url": "/v1/consent-events",
+      "status": 200
+    },
+    {
+      "url": "/v1/me",
+      "status": 200
+    },
+    {
+      "url": "/v1/overview",
+      "status": 200
+    },
+    {
+      "url": "/v1/decisions",
+      "status": 200
+    },
+    {
+      "url": "/v1/me",
+      "status": 200
+    },
+    {
+      "url": "/v1/overview",
+      "status": 200
+    },
+    {
+      "url": "/v1/evidence/bdadda6b-55e4-425d-82f1-5cb89be83638?format=json",
+      "status": 200
+    },
+    {
+      "url": "/v1/me",
+      "status": 200
+    },
+    {
+      "url": "/v1/overview",
+      "status": 200
+    },
+    {
+      "url": "/v1/evidence/bdadda6b-55e4-425d-82f1-5cb89be83638?format=csv",
+      "status": 200
+    },
+    {
+      "url": "/v1/me",
+      "status": 200
+    },
+    {
+      "url": "/v1/overview",
+      "status": 200
+    },
+    {
+      "url": "/v1/auth/tenant",
+      "status": 200
+    },
+    {
+      "url": "/v1/me",
+      "status": 200
+    },
+    {
+      "url": "/v1/overview",
+      "status": 200
+    },
+    {
+      "url": "/v1/auth/tenant",
+      "status": 200
+    },
+    {
+      "url": "/v1/me",
+      "status": 200
+    },
+    {
+      "url": "/v1/overview",
+      "status": 200
+    },
+    {
+      "url": "/v1/evidence/bdadda6b-55e4-425d-82f1-5cb89be83638?format=csv",
+      "status": 200
+    },
+    {
+      "url": "/v1/me",
+      "status": 200
+    },
+    {
+      "url": "/v1/overview",
+      "status": 200
+    },
+    {
+      "url": "/v1/evidence/bdadda6b-55e4-425d-82f1-5cb89be83638?format=csv",
+      "status": 200
+    },
+    {
+      "url": "/v1/me",
+      "status": 200
+    },
+    {
+      "url": "/v1/overview",
+      "status": 200
+    },
+    {
+      "url": "/v1/keys",
+      "status": 200
+    },
+    {
+      "url": "/v1/keys",
+      "status": 200
+    }
+  ],
+  "status": "passed",
+  "finished_at": "2026-10-01T03:47:17.937Z",
+  "space_finished": true
+}

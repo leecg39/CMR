@@ -1,0 +1,25 @@
+{
+  "status": "failed",
+  "description": "CSV Date.toString formatting omits milliseconds",
+  "events": 3,
+  "mismatches": [
+    {
+      "id": "e260ffd5-6318-4375-a70b-87fb7d78cd87",
+      "json_received_at": "2026-10-01T03:36:10.703Z",
+      "csv_received_at": "Thu Oct 01 2026 12:36:10 GMT+0900 (Korean Standard Time)",
+      "parsed_csv_received_at": "2026-10-01T03:36:10.000Z"
+    },
+    {
+      "id": "871e2d08-b2be-4613-bcd5-70a42ceae508",
+      "json_received_at": "2026-10-01T03:36:13.677Z",
+      "csv_received_at": "Thu Oct 01 2026 12:36:13 GMT+0900 (Korean Standard Time)",
+      "parsed_csv_received_at": "2026-10-01T03:36:13.000Z"
+    },
+    {
+      "id": "f5a61daf-498f-4cf3-8a67-18115c2a0e0b",
+      "json_received_at": "2026-10-01T03:37:42.201Z",
+      "csv_received_at": "Thu Oct 01 2026 12:37:42 GMT+0900 (Korean Standard Time)",
+      "parsed_csv_received_at": "2026-10-01T03:37:42.000Z"
+    }
+  ]
+}

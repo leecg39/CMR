@@ -1,0 +1,4 @@
+﻿id,action,evidence,revision,occurred_at,received_at
+"e260ffd5-6318-4375-a70b-87fb7d78cd87","granted","VERIFIED","1","2026-10-01T03:35:00.000Z","2026-10-01T03:36:10.703Z"
+"871e2d08-b2be-4613-bcd5-70a42ceae508","granted","VERIFIED","1","2026-10-01T03:36:00.000Z","2026-10-01T03:36:13.677Z"
+"f5a61daf-498f-4cf3-8a67-18115c2a0e0b","revoked","VERIFIED","2","2026-10-01T03:37:00.000Z","2026-10-01T03:37:42.201Z"
