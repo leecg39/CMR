@@ -1,0 +1,15 @@
+{
+  "frozen_before_experiments": true,
+  "files": {
+    "autoresearch/policy-2026-10-01/prepare.ts": "541ffb23e89789569041fdb9bfd7db619c2aad64190aa359a74455a1da1c4d93",
+    "autoresearch/policy-2026-10-01/program.md": "a35bc242e3d633fdcfff020d087358c615967198a1f9646b862ba42bcb83d034",
+    "scripts/test.ts": "387c3ce147a75881c962f11ad47735f2aa83d74aad4f9bab2587d17ccf3b8310",
+    "tests/api.test.ts": "bb50953b1f27f34ddf52bf2da8a8bed305b4e1232372605ca85ed9804e8c201c",
+    "tests/connectors.test.ts": "6eca45d4a05e18cb7e9fe20d41233acc0ef88c34f56cfb611255b1591a3dab3b",
+    "tests/core.test.ts": "b54a47263097bf632f5a8d2baa67f51ba1908f540ed244d0da0fe7bd870dabe1",
+    "tests/evidence-csv.regression-1.test.ts": "6ed1952617dac8c6a158c6550719f2c6162ed3767622fac25f93bf40e628f433",
+    "tests/performance.test.ts": "8af4c7401eff89ba60805ad1a845a93eae138e28501aad5af81dbcb34566261d",
+    "tests/qa.test.ts": "cd03631332547296865c3a5674018ac3cd2076983d855dbb858db2c234151e92",
+    "tests/scanner.test.ts": "b6bee502664c63677edaba7014e704283d98435aacec6ae5ff3c6ca1b1087b64"
+  }
+}

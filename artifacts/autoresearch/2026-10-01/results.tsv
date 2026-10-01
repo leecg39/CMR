@@ -1,0 +1,3 @@
+# metric_direction: lower_is_better
+iteration	commit	metric	delta	guard	status	description
+0	983320c	12	0	pass	baseline	isolated PostgreSQL baseline; repeated query count 12

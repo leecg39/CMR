@@ -1,0 +1,76 @@
+{
+  "source_commit": "983320cf25357c99f9fc0b57ca67b9c12b27bba5",
+  "environment": "local PostgreSQL / isolated synthetic DB / not a production SLA",
+  "runtime": {
+    "node": "v25.4.0",
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  "metric_direction": "lower_is_better",
+  "metric": 12,
+  "metric_name": "SQL calls per allowed marketing evaluation",
+  "transaction_queries_excluded": true,
+  "warmup": 20,
+  "samples": 500,
+  "runs": [
+    {
+      "samples": 100,
+      "concurrency": 5,
+      "p50_ms": 4.4044999999999845,
+      "p95_ms": 8.158166999999935,
+      "max_ms": 18.673625000000015
+    },
+    {
+      "samples": 100,
+      "concurrency": 5,
+      "p50_ms": 4.194541000000072,
+      "p95_ms": 7.038999999999987,
+      "max_ms": 7.774415999999974
+    },
+    {
+      "samples": 100,
+      "concurrency": 5,
+      "p50_ms": 4.092416000000071,
+      "p95_ms": 7.017875000000004,
+      "max_ms": 8.117125000000101
+    },
+    {
+      "samples": 100,
+      "concurrency": 5,
+      "p50_ms": 4.145040999999992,
+      "p95_ms": 8.276042000000189,
+      "max_ms": 21.06987499999991
+    },
+    {
+      "samples": 100,
+      "concurrency": 5,
+      "p50_ms": 4.08504199999993,
+      "p95_ms": 7.065166999999974,
+      "max_ms": 7.314624999999978
+    }
+  ],
+  "median_p95_ms": 7.065166999999974,
+  "semantic_checks": [
+    "non-owner role / FORCE RLS",
+    "allowed decision and persisted evidence",
+    "missing reception consent",
+    "legacy evidence",
+    "quota exceeded",
+    "restricted subject",
+    "unverified contact",
+    "channel mismatch",
+    "unapproved template",
+    "inactive connector",
+    "stale optout sync",
+    "unreviewed purpose",
+    "null purpose",
+    "inactive tenant",
+    "outside daytime",
+    "withdrawal / suppression / revision",
+    "missing / foreign subject_id",
+    "missing / foreign contact_id",
+    "missing / foreign template_id",
+    "permission denial"
+  ],
+  "passed": true
+}
