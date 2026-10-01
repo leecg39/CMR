@@ -8,7 +8,6 @@ import {
   permit,
   type Context,
 } from "../consent-domain/common.js";
-import { owned } from "../consent-domain/consent.js";
 export const RULESET = "kr_sms_explicit_daytime_v1";
 export const sendInput = z
   .object({ subject_id: z.uuid(), contact_id: z.uuid(), template_id: z.uuid() })
@@ -104,7 +103,21 @@ export async function evaluate(
       !controller.opt_out.startsWith("080")
     )
       r.push("SENDER_OR_OPTOUT_MISMATCH");
-    const p = t.purpose_id ? await owned(db, "purposes", t.purpose_id) : null;
+    const {
+      rows: [{ purpose: p, state, marketing_use: use }],
+    } = await db.query(
+      `SELECT
+         (SELECT to_jsonb(p) FROM purposes p WHERE p.id=$3) AS purpose,
+         (SELECT to_jsonb(c) FROM consent_current c
+           WHERE c.subject_id=$1 AND c.contact_id=$2 AND c.purpose_id=$3) AS state,
+         (SELECT to_jsonb(c) FROM consent_current c
+           JOIN purposes p ON p.tenant_id=c.tenant_id AND p.id=c.purpose_id
+          WHERE c.subject_id=$1 AND p.controller_id=$4
+            AND p.kind='personal_info' AND p.key='marketing_use'
+            AND p.reviewed AND p.lawful_basis='consent' LIMIT 1) AS marketing_use`,
+      [s.id, c.id, t.purpose_id, t.controller_id],
+    );
+    if (t.purpose_id && !p) fail("NOT_FOUND", 404);
     if (
       !p ||
       p.controller_id !== t.controller_id ||
@@ -114,12 +127,6 @@ export async function evaluate(
       r.push("PURPOSE_SCOPE_MISMATCH");
     if (!p?.reviewed || p?.lawful_basis !== "consent")
       r.push("LAWFUL_BASIS_UNREVIEWED");
-    const {
-      rows: [state],
-    } = await db.query(
-      "SELECT * FROM consent_current WHERE subject_id=$1 AND contact_id=$2 AND purpose_id=$3",
-      [s.id, c.id, t.purpose_id],
-    );
     revision = state?.revision ?? 0;
     if (state?.state !== "GRANTED")
       r.push(
@@ -128,12 +135,6 @@ export async function evaluate(
           : "RECEPTION_CONSENT_MISSING",
       );
     else if (state.evidence !== "VERIFIED") r.push("EVIDENCE_UNVERIFIED");
-    const {
-      rows: [use],
-    } = await db.query(
-      "SELECT c.* FROM consent_current c JOIN purposes p ON (p.tenant_id=c.tenant_id AND p.id=c.purpose_id) WHERE c.subject_id=$1 AND p.controller_id=$2 AND p.kind='personal_info' AND p.key='marketing_use' AND p.reviewed AND p.lawful_basis='consent'",
-      [s.id, t.controller_id],
-    );
     if (use?.state !== "GRANTED" || use?.evidence !== "VERIFIED")
       r.push("MARKETING_USE_CONSENT_MISSING");
     const blocked = await db.query(
